@@ -161,5 +161,7 @@ extension Translations {
         "Bundle Identifier mismatch": "Bundle-Identifier stimmt nicht überein",
         "Developer Team ID mismatch (blocked for security)": "Developer Team ID stimmt nicht überein (aus Sicherheitsgründen blockiert)",
         "Interface language": "Sprache der Oberfläche",
+        "Connection verified; waiting for events. Complete any required hook trust, then give the agent a task.": "Verbindung geprüft; warte auf Ereignisse. Bestätigen Sie bei Bedarf die Hooks und geben Sie dem Agenten dann eine Aufgabe.",
+        "Activity: event received {0}{1}": "Aktivität: Ereignis empfangen {0}{1}",
     ]
 }

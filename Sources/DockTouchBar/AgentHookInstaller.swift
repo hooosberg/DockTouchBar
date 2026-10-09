@@ -29,7 +29,28 @@ enum AgentHookInstaller {
             [ $# -ge 2 ] && shift 2 || shift $#
             for A in "$@"; do A="${A//$'\t'/ }"; A="${A//$'\n'/ }"; A="${A//$'\r'/ }"; EXTRA="$EXTRA$A"$'\t'; done
           fi
-          { printf '%s\t%s\t%s\n' "$NAME" "$PPID" "$EXTRA"; sleep 1; } | /usr/bin/nc -U -w 2 "$SOCK" 2>/dev/null || echo "NOT_REACHABLE could not talk to the app. Stop and tell the user."
+          # Keep diagnostics for pairing commands; normal lifecycle events below stay silent.
+          REPLY="$( { printf '%s\t%s\t%s\n' "$NAME" "$PPID" "$EXTRA"; sleep 1; } | LC_ALL=C /usr/bin/nc -U -w 2 "$SOCK" 2>&1)"
+          NC_STATUS=$?
+          if [ "$NC_STATUS" -eq 0 ] && [ -n "$REPLY" ]; then
+            printf '%s\\n' "$REPLY"
+          else
+            REASON=connection_failed
+            case "$REPLY" in
+              *"Operation not permitted"*|*"Permission denied"*) REASON=permission_denied ;;
+              *"Connection refused"*) REASON=connection_refused ;;
+              *"timed out"*) REASON=timeout ;;
+            esac
+            [ "$NC_STATUS" -ne 0 ] || REASON=no_response
+            printf 'NOT_REACHABLE reason=%s nc_exit=%s. Stop and tell the user.\\n' "$REASON" "$NC_STATUS"
+            printf 'socket=%s\\n' "$SOCK"
+            if [ -n "$REPLY" ]; then
+              printf '%s\\n' "$REPLY"
+            else
+              echo "nc emitted no diagnostic; the cause cannot be determined from its exit status alone."
+            fi
+            echo "A sandbox or local socket permissions may block access even while the app is running. Stop and report this output. Any retry outside the sandbox requires your agent's normal permission approval; do not disable the sandbox or bypass hook trust."
+          fi
           exit 0 ;;
         esac
         [ -S "$SOCK" ] || exit 0

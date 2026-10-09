@@ -24,7 +24,7 @@ enum AgentPairingPrompt {
         "\(script)" <事件> <你的id> < /dev/null
         - 你的id：小写字母、数字、短横线，用你自己的产品名（例如 workbuddy）。
         - 命令末尾一定要加 < /dev/null。事件命令会立刻返回、从不报错；\(AppInfo.name) 没开时什么也不做。
-        - 你的命令跑在沙箱、容器、XPC 服务里都没关系，\(AppInfo.name) 会自己找到你所在的 App，你不需要为此改装任何东西。
+        - \(AppInfo.name) 会自行识别你所在的 App，但沙箱、容器或 XPC 服务仍可能限制访问本机 socket。不要改装 App，也不要关闭安全限制。
 
         【事件只有这 5 个】
         UserPromptSubmit —— 用户交给你任务、你开始工作时
@@ -36,6 +36,7 @@ enum AgentPairingPrompt {
         【步骤，按顺序做，每步看期望】
         1. 自检：运行 "\(script)" --check <你的id> < /dev/null。期望：第一行以 OK 开头，并有 host_app=… 和 watch=… 两行。
            若是 NOT_RUNNING：请我先打开 \(AppInfo.name)，然后停下等我。若是 host_app=NOT_FOUND：停下并汇报（红线 2）。
+           若是 NOT_REACHABLE：把完整输出原样报告，然后停下等我。reason=permission_denied 表示本地 socket 访问被拒绝；请说明需要通过你所在软件的正式权限审批，获准后原样重跑命令。不要自行提权、关闭沙箱或伪造 hook 信任。其他原因按原始错误处理，不要猜成 App 没开。
            若 watch=builtin：这个软件的工作状态 \(AppInfo.name) 自己就能看到，你什么都不用配置：直接跳到第 4 步，登记（第 5 步）时方法写 passive、不用列文件。不要修改任何文件，不要写规则。
            若 watch=none：继续第 2 步。
         2. （只有 watch=none 才做）选方案：查你所在软件的官方文档，它支持 hook 或生命周期回调（并且你能确认配置文件的位置、格式、事件名）就用方案 A，否则用方案 B。不要凭记忆写；拿不准就选 B。
@@ -45,6 +46,7 @@ enum AgentPairingPrompt {
            “每次用户交给我任务，先运行 "\(script)" UserPromptSubmit <你的id> < /dev/null。之后每完成一个命令或工具，运行 "\(script)" PostToolUse <你的id> < /dev/null。回复完用户、结束任务前，运行 "\(script)" Stop <你的id> < /dev/null（出错了也要运行）。”
            （把规则里的 <你的id> 换成你真实的 id。）方案 B 靠你每次自觉照做，比 hook 靠不住，请如实告诉我。
         4. 验证：运行 "\(script)" --verify <你的id> < /dev/null。期望：以 PASS 开头，我的 Touch Bar 上你所在 App 的图标出现字符雨、随后显示 OK。若是 FAIL，或没有 PASS：停下并汇报（红线 2）。
+           PASS 仅验证连接、宿主识别和动画演示，不代表 hook 已获信任或自动执行。若仍需我审核信任，在最后汇报中明确写出；请我完成后交给你一个任务观察实际效果，不要把演示说成自动接入已生效。
         5. 登记：运行 "\(script)" --register <你的id> "<显示名>" <hook、instructions 或 passive> "<一句话说明做了什么>" <你改过的所有文件的绝对路径…> < /dev/null。期望：以 OK 开头。登记只有 --verify 通过后才会被接受。
 
         【最后，按这个模板汇报，不要加别的】
@@ -73,7 +75,7 @@ enum AgentPairingPrompt {
         "\(script)" <event> <your-id> < /dev/null
         - your-id: lowercase letters, digits and dashes only; use your own product name (e.g. workbuddy).
         - Always end the command with < /dev/null. Event commands return immediately, never fail, and do nothing when \(AppInfo.name) isn't running.
-        - It doesn't matter if your commands run in a sandbox, a container or an XPC service: \(AppInfo.name) finds your app by itself, and you don't need to rig anything for that.
+        - \(AppInfo.name) identifies your host app itself, but a sandbox, container or XPC service may still restrict access to its local socket. Don't rig an app or disable security restrictions.
 
         [Only these 5 events]
         UserPromptSubmit — the user hands you a task and you start working
@@ -85,6 +87,7 @@ enum AgentPairingPrompt {
         [Steps — do them in order and check each expectation]
         1. Self-check: run "\(script)" --check <your-id> < /dev/null. Expected: the first line starts with OK, followed by a host_app=… line and a watch=… line.
            NOT_RUNNING: ask me to open \(AppInfo.name), then stop and wait. host_app=NOT_FOUND: stop and report (red line 2).
+           NOT_REACHABLE: report the complete output as is, then stop and wait. reason=permission_denied means local socket access was denied; explain that the same command needs approval through your app's normal permission flow before retrying. Don't escalate on your own, disable the sandbox or fake hook trust. For other causes, report the original error rather than assuming the app isn't running.
            watch=builtin: \(AppInfo.name) can see this app's working state by itself and you configure nothing: jump to step 4, and when registering (step 5) use method passive and list no files. Don't modify any file or write any rule.
            watch=none: continue with step 2.
         2. (Only when watch=none) Pick a method: check the official docs of the app you run in. If it supports hooks or lifecycle callbacks (and you can confirm the config file location, format and event names), use Option A; otherwise Option B. Don't write from memory; if unsure, pick B.
@@ -94,6 +97,7 @@ enum AgentPairingPrompt {
            "Whenever the user gives me a task, first run "\(script)" UserPromptSubmit <your-id> < /dev/null. After each command or tool call, run "\(script)" PostToolUse <your-id> < /dev/null. After replying to the user, before the task ends, run "\(script)" Stop <your-id> < /dev/null (also when it failed)."
            (Replace <your-id> in the rule with your real id.) Option B depends on you following it every time, so it is less reliable than hooks; please tell me honestly.
         4. Verify: run "\(script)" --verify <your-id> < /dev/null. Expected: it starts with PASS, and on my Touch Bar the icon of your app shows falling digits, then OK. If it says FAIL or doesn't say PASS: stop and report (red line 2).
+           PASS verifies only the connection, host identity and animation demo, not hook trust or automatic execution. If I still need to review and trust hooks, say so in the final report and ask me to give you a task afterwards to observe the real behavior. Don't present the demo as proof that automatic delivery is enabled.
         5. Register: run "\(script)" --register <your-id> "<display name>" <hook, instructions or passive> "<one line on what you did>" <absolute paths of every file you changed…> < /dev/null. Expected: it starts with OK. Registration is only accepted after --verify passed.
 
         [Finally, report with this template and add nothing else]

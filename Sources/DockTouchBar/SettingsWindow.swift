@@ -560,14 +560,14 @@ struct PairingPage: View {
                     让任何有自主能力的智能体（Claude Code、Codex、WorkBuddy、Antigravity、豆包、千问……）自己接进来：
                     1. 复制下面的提示词，粘贴给它。
                     2. 它会自己查它的软件怎么挂 hook（没有 hook 就写进它的长期指令），改配置前先备份，并告诉你每一步做了什么。
-                    3. 它验证通过后会出现在下面的列表里，之后它工作时，所在 App 的图标就会有动画。
+                    3. 连接验证通过后会出现在下面的列表里；审核信任 hook 后，交给它一个任务，确认图标随工作状态变化。验证演示不代表自动上报已启用。
                     如果它的软件要你审核或信任新增的 hook，按它说的点一下就行。不想用了，在列表里复制“取消配对提示词”交给它。
                     """,
                     """
                     Let any capable agent (Claude Code, Codex, WorkBuddy, Antigravity, Doubao, Qwen…) connect itself:
                     1. Copy the prompt below and paste it to the agent.
                     2. It looks up how its app does hooks (or, without hooks, writes to its long-term instructions), backs up its config first, and tells you every step.
-                    3. Once it passes verification it appears in the list below; from then on, the icon of its app animates while it works.
+                    3. After connection verification it appears in the list below. Review and trust its hooks, then give it a task to check that the icon follows its work. The demo does not prove automatic delivery is enabled.
                     If its app asks you to review or trust a new hook, just click as it says. To stop, copy the unpair prompt from the list and hand it to the agent.
                     """))
                     .font(.callout).foregroundStyle(.secondary)
@@ -617,11 +617,11 @@ struct PairingPage: View {
             let seen = activity[agent.id]
             VStack(alignment: .leading, spacing: 3) {
                 HStack {
-                    Label(agent.name, systemImage: seen != nil ? "checkmark.circle.fill" : "clock")
-                        .foregroundStyle(seen != nil ? Color.green : Color.orange)
+                    Label(agent.name, systemImage: seen?.bundleID != nil ? "checkmark.circle.fill" : "clock")
+                        .foregroundStyle(seen?.bundleID != nil ? Color.green : Color.orange)
                     if !agent.method.isEmpty { Text(agent.method).font(.caption).foregroundStyle(.secondary) }
                     Spacer()
-                    if let host = seen?.bundleID {
+                    if let host = seen?.bundleID ?? agent.host {
                         Button(L10n.tr("试一下", "Try it")) { AgentMonitor.shared.simulate(bundleID: host) }
                     }
                     if agent.method == "passive" {
@@ -638,7 +638,7 @@ struct PairingPage: View {
                         }
                     }
                 }
-                Text(status(seen)).font(.caption).foregroundStyle(.secondary)
+                Text(status(seen, agent: agent)).font(.caption).foregroundStyle(.secondary)
             }
         }
         if paired.isEmpty {
@@ -646,8 +646,13 @@ struct PairingPage: View {
         }
     }
 
-    private func status(_ seen: AgentActivity?) -> String {
-        guard let seen else { return L10n.tr("待验证：还没收到它发来的事件", "Pending: no events received yet") }
+    private func status(_ seen: AgentActivity?, agent: PairedAgent) -> String {
+        guard let seen else {
+            if agent.host != nil {
+                return L10n.tr("连接已验证；等待事件。请完成所需的 hook 信任，再交给它一个任务。", "Connection verified; waiting for events. Complete any required hook trust, then give the agent a task.")
+            }
+            return L10n.tr("待验证：还没收到它发来的事件", "Pending: no events received yet")
+        }
         // “几分钟前”按 App 里选的语言显示，不跟系统语言（英文界面不能冒出“分钟前”）。
         let formatter = RelativeDateTimeFormatter()
         if L10n.language != .system { formatter.locale = Locale(identifier: L10n.language.rawValue) }
@@ -658,7 +663,8 @@ struct PairingPage: View {
         } else if seen.bundleID == nil {
             app = " · " + L10n.tr("没找到所在 App，图标不会有动画", "host app not found — no icon animation")
         }
-        return L10n.tr("已验证：\(ago) 收到事件\(app)", "Verified: event received \(ago)\(app)")
+        // An event may also be sent manually; don't claim automatic hook delivery or trust.
+        return L10n.tr("事件记录：\(ago) 收到事件\(app)", "Activity: event received \(ago)\(app)")
     }
 
     private func copy(_ text: String) {

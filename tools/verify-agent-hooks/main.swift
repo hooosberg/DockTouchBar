@@ -1,6 +1,7 @@
 // 验证 AI 助手接入：事件状态机、配对智能体的宽松收尾、打断检测、登记和最近活动、旧 hook 迁移、提示词和脚本。
 // 全程在临时目录里做，不碰真实的 ~/.claude、~/.codex 和应用支持目录。由 tools/verify-agent-hooks.sh 编译运行。
 import AppKit
+import Darwin
 
 var failures = 0
 func check(_ ok: Bool, _ message: String) {
@@ -302,6 +303,8 @@ check(prompt.contains("--check") && prompt.contains("--verify") && prompt.contai
 check(!prompt.contains("会话id") && !prompt.contains(agentsDir.path), "提示词: 不要智能体管会话 id，也不让它手写登记文件")
 check(prompt.contains("伪装") && prompt.contains("卡住就停") && prompt.contains("汇报"), "提示词: 红线（不伪造、卡住就停）和汇报模板")
 check(prompt.contains("watch=builtin") && prompt.contains("watch=none") && prompt.contains("passive"), "提示词: 按 watch= 分流，内置监视的软件跳过接入、用 passive 登记")
+check(prompt.contains("reason=permission_denied") && prompt.contains("正式权限审批"), "提示词: socket 权限拒绝必须停下并通过正式审批，不关闭沙箱")
+check(prompt.contains("不代表 hook 已获信任或自动执行"), "提示词: 不把演示说成自动 hook 已启用")
 let scriptText = try String(contentsOfFile: script, encoding: .utf8)
 check(scriptText.contains("[ -t 0 ]") && scriptText.contains("$EVENT") && scriptText.contains("manual"), "脚本: 终端上不卡 stdin、支持 agent id、手动调用带 manual 标记")
 let mode = (try? fm.attributesOfItem(atPath: script))?[.posixPermissions] as? Int
@@ -312,10 +315,10 @@ do {
     let monitor = makeMonitor { _ in "com.apple.finder" }
     monitor.start()
     defer { monitor.stop() }
-    func runCheck(_ args: [String]) -> String {
+    func runCheck(_ args: [String], denyNetwork: Bool = false) -> String {
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/bin/bash")
-        process.arguments = [script] + args
+        process.executableURL = URL(fileURLWithPath: denyNetwork ? "/usr/bin/sandbox-exec" : "/bin/bash")
+        process.arguments = (denyNetwork ? ["-p", "(version 1) (allow default) (deny network*)", "/bin/bash"] : []) + [script] + args
         let pipe = Pipe()
         process.standardOutput = pipe
         process.standardInput = FileHandle.nullDevice
@@ -327,6 +330,14 @@ do {
     Thread.sleep(forTimeInterval: 0.3)
     let output = runCheck(["--check", "bot"])
     check(output.hasPrefix("OK") && output.contains("host_app=com.apple.finder") && output.contains("agent=bot registered=no"), "自检: App 在运行时回复 OK、所在 App、是否登记")
+    // Run the real generated script against a real listener with network access denied.
+    for mode in ["--check", "--verify", "--register"] {
+        let denied = runCheck([mode, "sandbox-bot"], denyNetwork: true)
+        // Apple's nc may fail silently even with -v. Never infer errno from exit 1.
+        check(denied.hasPrefix("NOT_REACHABLE") && denied.contains("nc_exit=1") && denied.contains("socket=\(AgentMonitor.socketURL.path)") && denied.contains("normal permission approval"), "诊断: \(mode) 保留沙箱连接失败的退出码、socket 和正式审批提示")
+        check(denied.contains("reason=permission_denied") || (denied.contains("reason=connection_failed") && denied.contains("cause cannot be determined")), "诊断: \(mode) 没有底层错误信息时不猜测原因")
+    }
+    check(runCheck(["Stop", "sandbox-bot"], denyNetwork: true).isEmpty, "诊断: 沙箱拒绝时普通事件仍然静默")
     try #"{"id":"bot","name":"Bot"}"#.write(to: agentsDir.appendingPathComponent("bot.json"), atomically: true, encoding: .utf8)
     check(runCheck(["--check", "bot"]).contains("registered=yes"), "自检: 登记后显示 registered=yes")
     check(!runCheck(["--check"]).contains("agent="), "自检: 不带 id 也能用")
@@ -338,6 +349,13 @@ do {
     check(runCheck(["--verify"]).hasPrefix("FAIL"), "验证: 不带 id 直接 FAIL")
     let verify = runCheck(["--verify", "newbie"])
     check(verify.hasPrefix("PASS") && verify.contains("host_app=com.apple.finder"), "验证: 找到所在 App 时 PASS，并报出所在 App")
+    RunLoop.main.run(until: Date().addingTimeInterval(0.05))
+    check(AgentRegistry.lastActivity()["newbie"] == nil, "验证: 动画演示不会伪造 Stop 或任务活动")
+    monitor.handle(event: "UserPromptSubmit", sessionID: "real-task", from: 1, agent: "newbie")
+    let taskActivity = AgentRegistry.lastActivity()["newbie"]
+    _ = runCheck(["--verify", "newbie"])
+    RunLoop.main.run(until: Date().addingTimeInterval(0.05))
+    check(AgentRegistry.lastActivity()["newbie"] == taskActivity, "验证: 重复演示不会覆盖已有真实事件")
     check(runCheck(["--register", "newbie", "New Bie", "hook-ish", "note"]).hasPrefix("FAIL"), "登记: 方法不是 hook 或 instructions 会被拒绝")
     check(runCheck(["--register", "other", "Other", "hook", "note"]).hasPrefix("FAIL"), "登记: 登记的 id 必须是刚通过验证的那个")
     let registered = runCheck(["--register", "newbie", "New Bie", "Instructions", "加了一条规则", "/Users/x/AGENTS.md", "relative/path", "/Users/x/rules.md"])
@@ -345,6 +363,7 @@ do {
     let entry = AgentRegistry.load().first { $0.id == "newbie" }
     check(entry?.name == "New Bie" && entry?.method == "instructions" && entry?.notes == "加了一条规则", "登记: App 写出的文件字段正确（方法统一小写）")
     check(entry?.files == ["/Users/x/AGENTS.md", "/Users/x/rules.md"], "登记: 只收绝对路径")
+    check(entry?.host == "com.apple.finder", "登记: 没有任务事件时仍保存验证过的宿主，供试一下使用")
     check(AgentRegistry.load().contains { $0.id == "newbie" } && runCheck(["--check", "newbie"]).contains("registered=yes"), "登记: 自检能看到已登记")
     // 过期的验证不能用来登记。
     check(monitor.registerReply(agent: "newbie", fields: ["N", "hook", ""], now: Date().addingTimeInterval(AgentMonitor.verifiedValidFor + 1)).hasPrefix("FAIL"), "登记: 验证超过一小时就要重新验证")
@@ -360,6 +379,39 @@ do {
     Thread.sleep(forTimeInterval: 0.2)
     check(runCheck(["--check", "bot"]).hasPrefix("NOT_RUNNING"), "自检: App 没运行时说 NOT_RUNNING")
     check(runCheck(["Stop", "bot", "s1"]).isEmpty, "脚本: 发事件永远静默、不输出")
+
+    // A stale socket and a peer which accepts but never replies are different failures.
+    let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+    var address = sockaddr_un()
+    address.sun_family = sa_family_t(AF_UNIX)
+    let capacity = MemoryLayout.size(ofValue: address.sun_path)
+    withUnsafeMutablePointer(to: &address.sun_path) { tuple in
+        tuple.withMemoryRebound(to: CChar.self, capacity: capacity) { _ = strlcpy($0, AgentMonitor.socketURL.path, capacity) }
+    }
+    let bound = withUnsafePointer(to: &address) {
+        $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { bind(fd, $0, socklen_t(MemoryLayout<sockaddr_un>.size)) }
+    }
+    check(fd >= 0 && bound == 0, "诊断: 创建隔离的测试 socket")
+    if fd >= 0 && bound == 0 {
+        let refused = runCheck(["--check", "bot"])
+        check(refused.hasPrefix("NOT_REACHABLE") && refused.contains("nc_exit=1") && !refused.contains("reason=permission_denied"), "诊断: socket 存在但未监听时报告失败，不误诊为权限拒绝")
+        if listen(fd, 1) == 0 {
+            DispatchQueue.global().async {
+                let client = accept(fd, nil, nil)
+                if client >= 0 {
+                    var buffer = [UInt8](repeating: 0, count: 4096)
+                    _ = read(client, &buffer, buffer.count)
+                    close(client)
+                }
+            }
+            let empty = runCheck(["--check", "bot"])
+            check(empty.hasPrefix("NOT_REACHABLE reason=no_response nc_exit=0"), "诊断: 连接成功但没有回复不能被当成自检成功")
+        } else {
+            check(false, "诊断: 测试 socket 监听成功")
+        }
+    }
+    if fd >= 0 { close(fd) }
+    unlink(AgentMonitor.socketURL.path)
 }
 let trial = makeMonitor()
 trial.simulate(bundleID: "app.trial")

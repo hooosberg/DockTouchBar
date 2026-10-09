@@ -161,5 +161,7 @@ extension Translations {
         "Bundle Identifier mismatch": "Bundle Identifier 不符",
         "Developer Team ID mismatch (blocked for security)": "開發者 Team ID 不符（已因安全原因阻止）",
         "Interface language": "介面語言",
+        "Connection verified; waiting for events. Complete any required hook trust, then give the agent a task.": "連線已驗證；等待事件。請完成所需的 hook 信任，再交給智慧體一個任務。",
+        "Activity: event received {0}{1}": "活動記錄：{0} 收到事件{1}",
     ]
 }

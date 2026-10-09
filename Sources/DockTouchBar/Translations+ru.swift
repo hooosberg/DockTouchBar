@@ -161,5 +161,7 @@ extension Translations {
         "Bundle Identifier mismatch": "Несоответствие идентификатора пакета",
         "Developer Team ID mismatch (blocked for security)": "Несоответствие идентификатора команды разработчика (заблокировано в целях безопасности)",
         "Interface language": "Язык интерфейса",
+        "Connection verified; waiting for events. Complete any required hook trust, then give the agent a task.": "Соединение проверено; ожидание событий. При необходимости подтвердите доверие к хукам, затем дайте агенту задачу.",
+        "Activity: event received {0}{1}": "Активность: событие получено {0}{1}",
     ]
 }

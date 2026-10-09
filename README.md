@@ -99,7 +99,7 @@ Engineered for 24/7 background residency using event-driven app and window updat
 
 1. Open **Settings → Pair agents** and press **Copy prompt**.
 2. Paste it to your agent (any agent that can run commands on your Mac). It checks itself first, then connects the best way it can: through its own hooks, or, if it has none, through a rule in its long-term instructions; for apps Vibe can watch by itself it changes nothing at all. It backs up its config first and tells you every step.
-3. Vibe itself decides whether verification passed (the agent can't mark itself as verified), and only then does the agent appear in the list with **Verified**. From then on, its icon animates while it works. **Try it** plays the animation without waiting for a task, and **Copy unpair prompt** hands the agent a prompt that undoes its own changes.
+3. Vibe itself verifies the connection and host app (the agent can't mark itself as verified), then the agent registers in the list. This plays a demo; it does not prove that hooks are trusted or running automatically. Complete any required hook trust, then give the agent a task and check that its icon follows the work. The list shows connection verification separately from received activity; manually sent events are not proof of automatic delivery. **Try it** plays only the animation, and **Copy unpair prompt** hands the agent a prompt that undoes its own changes.
 
 ![Pair agents page](assets/vibe-pairing-en.png)
 
@@ -108,6 +108,7 @@ What to know:
 - **The app never edits another tool's configuration.** The agent does that, on your Mac, after you paste the prompt, and it is told to back up first, never touch your existing hooks, and show you what it did. Nothing leaves your Mac for this feature.
 - **Needs an agent that can run a command on your Mac and runs in a desktop app** (a terminal or editor works too). Web-only chat tools can't. If the agent can't reach the app, it is told to say so instead of claiming success.
 - **Some agents ask you to trust the new hook once.** Codex, for example: ChatGPT Settings → Hooks → Trust all. The agent will tell you where to click.
+- A sandbox can deny access to Vibe's local socket even while the app is running. Pairing commands report `NOT_REACHABLE` with a reason, the `nc` exit status and any diagnostic it emits. Some macOS versions fail silently even with verbose output: `reason=connection_failed` then means the cause is unknown, not that Vibe is closed. For `reason=permission_denied`, stop and request approval through the agent's normal permission flow before retrying the same command. Do not disable the sandbox or bypass hook trust. `reason=no_response` means the connection returned no reply; it is not a successful check.
 
 ### Supported agents
 

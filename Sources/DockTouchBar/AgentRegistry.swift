@@ -25,7 +25,7 @@ struct AgentActivity: Equatable {
 enum AgentRegistry {
     static var directory: URL { AgentMonitor.supportDirectory.appendingPathComponent("agents", isDirectory: true) }
     static var logURL: URL { AgentMonitor.supportDirectory.appendingPathComponent("events.log") }
-    /// 每个智能体最近一次事件（App 自己写，重启和换日志都不丢），配对列表的“已验证”看它。
+    /// 每个智能体最近一次事件（App 自己写，重启和换日志都不丢）。连接验证和动画演示不写入这里。
     static var activityURL: URL { AgentMonitor.supportDirectory.appendingPathComponent("activity.json") }
 
     /// id 只能是小写字母、数字、短横线（也是登记文件名，不能带路径）。

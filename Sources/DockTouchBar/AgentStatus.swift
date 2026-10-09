@@ -256,14 +256,15 @@ final class AgentMonitor {
         verified[agent] = (owner, Date())
         verifiedLock.unlock()
         DispatchQueue.main.async { [weak self] in
-            self?.recordActivity(agent: agent, event: "Stop", bundleID: owner)
+            // Verification is a connection check and a demo, not a lifecycle event.
+            // In particular, it cannot prove that the agent's hooks are trusted or running.
             self?.simulate(bundleID: owner)
         }
         let name = NSWorkspace.shared.urlForApplication(withBundleIdentifier: owner)
             .map { FileManager.default.displayName(atPath: $0.path) } ?? owner
         return L10n.isChinese
-            ? "PASS host_app=\(owner) (\(name))。用户的 Touch Bar 上，这个 App 的图标现在应该在显示字符雨，几秒后显示 OK。下一步：用 --register 登记。\n"
-            : "PASS host_app=\(owner) (\(name)). On the user's Touch Bar the icon of this app should now show the falling digits, then OK. Next step: register with --register.\n"
+            ? "PASS host_app=\(owner) (\(name))。用户的 Touch Bar 上，这个 App 的图标现在应该在显示字符雨，几秒后显示 OK。仅验证连接和演示，不代表 hook 已获信任或自动运行。下一步：用 --register 登记。\n"
+            : "PASS host_app=\(owner) (\(name)). On the user's Touch Bar the icon of this app should now show the falling digits, then OK. This verifies the connection and demo only, not hook trust or automatic delivery. Next step: register with --register.\n"
     }
 
     /// 登记：只有这个 id 刚通过 `--verify` 才收。字段：显示名、方法（hook 或 instructions）、一句话说明、改过的文件（绝对路径，可以没有）。

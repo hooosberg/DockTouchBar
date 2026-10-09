@@ -161,5 +161,7 @@ extension Translations {
         "Bundle Identifier mismatch": "Paket Tanıtıcısı uyuşmuyor",
         "Developer Team ID mismatch (blocked for security)": "Geliştirici Takımı Kimliği uyuşmuyor (güvenlik için engellendi)",
         "Interface language": "Arayüz dili",
+        "Connection verified; waiting for events. Complete any required hook trust, then give the agent a task.": "Bağlantı doğrulandı; olaylar bekleniyor. Gerekli hook güven onaylarını tamamlayın, ardından ajana bir görev verin.",
+        "Activity: event received {0}{1}": "Etkinlik: olay alındı {0}{1}",
     ]
 }
