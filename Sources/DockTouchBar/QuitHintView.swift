@@ -10,7 +10,7 @@ import AppKit
 /// 松手取消就淡出，倒计时走完则闪一下再消失。具体配色、场景和角色由 `QuitHintTheme`（春夏秋冬）决定，菜单里可以切换。
 /// 长按要做的事，决定提示里的文字。
 enum QuitHintAction {
-    case quit, closeWindow, hide
+    case quit, forceQuit, closeWindow, hide
 }
 
 final class QuitHintView: NSView {
@@ -547,10 +547,20 @@ final class QuitHintView: NSView {
         CATransaction.commit()
     }
 
+    private var isOptionDown: Bool {
+        NSEvent.modifierFlags.contains(.option)
+    }
+
     /// 倒计时进行中：告诉用户现在该做什么（按住不放）、松手会发生什么。
     private var workingTitle: String {
         switch action {
-        case .quit: return L10n.tr("按住不放，关闭 \(appName)", "Hold to close \(appName)")
+        case .quit:
+            if isOptionDown {
+                return L10n.tr("按住不放，强制退出 \(appName)", "Hold to force quit \(appName)")
+            }
+            return L10n.tr("按住不放，关闭 \(appName)", "Hold to close \(appName)")
+        case .forceQuit:
+            return L10n.tr("按住不放，强制退出 \(appName)", "Hold to force quit \(appName)")
         case .closeWindow: return L10n.tr("按住不放，关闭 \(appName) 的窗口", "Hold to close \(appName)'s window")
         case .hide: return L10n.tr("按住不放，隐藏 \(appName)", "Hold to hide \(appName)")
         }
@@ -559,7 +569,13 @@ final class QuitHintView: NSView {
     /// 倒计时走完、动作已经发出、等结果这段时间：不用再按着了，告诉用户可以松手，事情正在办。
     private var releasingTitle: String {
         switch action {
-        case .quit: return L10n.tr("请松手，正在关闭 \(appName)", "Let go — closing \(appName)")
+        case .quit:
+            if isOptionDown {
+                return L10n.tr("请松手，正在强制退出 \(appName)", "Let go — force quitting \(appName)")
+            }
+            return L10n.tr("请松手，正在关闭 \(appName)", "Let go — closing \(appName)")
+        case .forceQuit:
+            return L10n.tr("请松手，正在强制退出 \(appName)", "Let go — force quitting \(appName)")
         case .closeWindow: return L10n.tr("请松手，正在关闭 \(appName) 的窗口", "Let go — closing \(appName)'s window")
         case .hide: return L10n.tr("请松手，正在隐藏 \(appName)", "Let go — hiding \(appName)")
         }
@@ -568,7 +584,13 @@ final class QuitHintView: NSView {
     /// 结果出来了，确实办成了。
     private var doneTitle: String {
         switch action {
-        case .quit: return L10n.tr("已关闭 \(appName)", "Closed \(appName)")
+        case .quit:
+            if isOptionDown {
+                return L10n.tr("已强制退出 \(appName)", "Force quit \(appName)")
+            }
+            return L10n.tr("已关闭 \(appName)", "Closed \(appName)")
+        case .forceQuit:
+            return L10n.tr("已强制退出 \(appName)", "Force quit \(appName)")
         case .closeWindow: return L10n.tr("已关闭 \(appName) 的窗口", "Closed \(appName)'s window")
         case .hide: return L10n.tr("已隐藏 \(appName)", "Hidden \(appName)")
         }
