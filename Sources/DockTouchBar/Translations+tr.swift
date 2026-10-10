@@ -165,5 +165,13 @@ extension Translations {
         "Bundle Identifier mismatch": "Paket Tanıtıcısı uyuşmuyor",
         "Developer Team ID mismatch (blocked for security)": "Geliştirici Takımı Kimliği uyuşmuyor (güvenlik için engellendi)",
         "Interface language": "Arayüz dili",
+        "⌥ + long-press": "⌥ + uzun basma",
+        "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.": "Donmuş veya normal şekilde kapanmayan bir uygulamayı zorla çıkar. İşlem hemen sonlandırılır, bu yüzden kaydedilmemiş çalışma kaybolur. Finder asla zorla çıkarılmaz.",
+        "AI agent status": "Yapay zekâ ajanı durumu",
+        "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.": "Bir ajan (Claude Code, Codex…) çalışırken, içinde çalıştığı uygulamanın simgesi düşen rakamlı bir piksel ekrana dönüşür, bittiğinde OK gösterir; kapatmak için simgeye dokunun. Bir ajanı bağlamak için “Pair agents” sayfasındaki istemi kopyalayıp ajana yapıştırın. Ayarlar’dan kapatabilirsiniz.",
+        "AI agents": "Yapay zekâ ajanları",
+        "More": "Diğer",
+        "Hide the Dock icon": "Dock simgesini gizle",
+        "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Ayarlar → Genel → Dock'ta simgeyi gizle: Dock’ta görünmez, menü çubuğunda kalır. Menüsünü açmak için menü çubuğu simgesine tıklayın veya uygulamayı Uygulamalar’dan yeniden açın.",
     ]
 }

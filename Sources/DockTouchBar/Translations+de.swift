@@ -165,5 +165,13 @@ extension Translations {
         "Bundle Identifier mismatch": "Bundle-Identifier stimmt nicht überein",
         "Developer Team ID mismatch (blocked for security)": "Developer Team ID stimmt nicht überein (aus Sicherheitsgründen blockiert)",
         "Interface language": "Sprache der Oberfläche",
+        "⌥ + long-press": "⌥ + langes Drücken",
+        "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.": "Sofort beenden, für eine App, die hängt oder sich nicht normal beenden lässt. Der Prozess wird direkt beendet, nicht gesicherte Arbeit geht verloren. Finder wird nie sofort beendet.",
+        "AI agent status": "Status von KI-Agenten",
+        "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.": "Während ein Agent (Claude Code, Codex …) arbeitet, wird das Symbol der App, in der er läuft, zu einem Pixelbildschirm mit fallenden Ziffern und zeigt danach OK; ein Tippen auf das Symbol blendet es aus. Zum Verbinden eines Agenten kopieren Sie auf der Seite „Pair agents“ den Prompt und fügen ihn beim Agenten ein. In den Einstellungen lässt sich das abschalten.",
+        "AI agents": "KI-Agenten",
+        "More": "Mehr",
+        "Hide the Dock icon": "Dock-Symbol ausblenden",
+        "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Einstellungen → Allgemein → Symbol im Dock ausblenden: Die App erscheint nicht mehr im Dock und bleibt in der Menüleiste. Klicken Sie auf das Menüleistensymbol oder öffnen Sie die App erneut aus „Programme“, um das Menü zu öffnen.",
     ]
 }

@@ -95,8 +95,27 @@ private struct SettingsView: View {
             Usage(icon: .symbol("power"), title: L10n.tr("长按", "Long-press"),
                   detail: L10n.tr("退出这个 App（等同 ⌘Q）。按住时右边缘出现像素画的倒计时，小角色沿进度条跑到头就退出；中途松手算单击。时长和提示的季节风格（春夏秋冬）可在设置里调整。",
                                   "Quit the app (same as ⌘Q). A pixel-art countdown appears at the edge and a tiny character runs along the progress bar; when it gets to the end, the app quits. Release early to treat it as a tap. The duration and the season (spring, summer, autumn, winter) are set in Settings.")),
+            Usage(icon: .symbol("bolt.fill"), title: L10n.tr("按住 ⌥ 再长按", "⌥ + long-press"),
+                  detail: L10n.tr("强制退出：用来结束卡死、正常退出没反应的 App。直接结束进程，没保存的内容会丢；访达不会被强制退出。",
+                                  "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.")),
             Usage(icon: .symbol("arrow.left.and.right"), title: L10n.tr("左右滑动", "Swipe"),
                   detail: L10n.tr("图标放不下时滚动。", "Scroll when the icons don't all fit.")),
+        ]
+    }
+
+    private var agents: [Usage] {
+        [
+            Usage(icon: .symbol("sparkles"), title: L10n.tr("AI 智能体状态", "AI agent status"),
+                  detail: L10n.tr("智能体（Claude Code、Codex 等）工作时，它所在 App 的图标变成带字符雨的像素屏幕，做完显示 OK，点一下图标收掉。在“配对智能体”页复制提示词，粘贴给智能体即可接入；不需要时可在设置里关闭。",
+                                  "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.")),
+        ]
+    }
+
+    private var tips: [Usage] {
+        [
+            Usage(icon: .symbol("dock.rectangle"), title: L10n.tr("隐藏程序坞图标", "Hide the Dock icon"),
+                  detail: L10n.tr("设置 → 通用 → 在程序坞中隐藏图标：程序坞里不再显示它，只在菜单栏常驻。想打开菜单时点菜单栏图标，或再次从“应用程序”打开它。",
+                                  "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.")),
         ]
     }
 
@@ -384,6 +403,8 @@ private struct SettingsView: View {
         VStack(alignment: .leading, spacing: 14) {
             section(L10n.tr("在图标上", "On the icons"), gestures)
             section(L10n.tr("右侧的按钮", "The buttons on the right"), buttons)
+            section(L10n.tr("AI 智能体", "AI agents"), agents)
+            section(L10n.tr("其他", "More"), tips)
             Text(L10n.tr("需要的权限只有“辅助功能”，在“设置”页的“权限”里能看到状态、点一下去开启。开关开着但设置里仍显示“未开启”：在 系统设置 → 隐私与安全性 → 辅助功能 里删掉 DockTouchBar，再重新添加并打开。",
                          "The only permission needed is Accessibility; its status is shown under “Permissions” on the Settings page, and one click takes you to turn it on. If it's switched on but Settings still says it's off: remove DockTouchBar in System Settings → Privacy & Security → Accessibility, then add it again and turn it on."))
                 .font(.caption).foregroundStyle(.secondary)

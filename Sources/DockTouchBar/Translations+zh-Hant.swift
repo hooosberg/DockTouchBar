@@ -165,5 +165,13 @@ extension Translations {
         "Bundle Identifier mismatch": "Bundle Identifier 不符",
         "Developer Team ID mismatch (blocked for security)": "開發者 Team ID 不符（已因安全原因阻止）",
         "Interface language": "介面語言",
+        "⌥ + long-press": "按住 ⌥ 再長按",
+        "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.": "強制結束：用來結束當機、正常結束沒反應的 App。會直接結束程序，未儲存的內容會遺失；訪達不會被強制結束。",
+        "AI agent status": "AI 智慧體狀態",
+        "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.": "智慧體（Claude Code、Codex 等）工作時，它所在 App 的圖示會變成帶字元雨的像素螢幕，完成後顯示 OK，點一下圖示即可收掉。在「Pair agents」頁複製提示詞，貼給智慧體就能接入；不需要時可在設定中關閉。",
+        "AI agents": "AI 智慧體",
+        "More": "其他",
+        "Hide the Dock icon": "隱藏程式塢圖示",
+        "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "設定 → 一般 → 在程式塢中隱藏圖示：Dock 裡不再顯示，只在選單列常駐。要開啟選單時點選單列圖示，或再次從「應用程式」開啟。",
     ]
 }

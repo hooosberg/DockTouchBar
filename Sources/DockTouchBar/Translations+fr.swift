@@ -165,5 +165,13 @@ extension Translations {
         "Bundle Identifier mismatch": "Incompatibilité du Bundle Identifier",
         "Developer Team ID mismatch (blocked for security)": "Incompatibilité de l'ID d'équipe développeur (bloquée pour la sécurité)",
         "Interface language": "Langue de l’interface",
+        "⌥ + long-press": "⌥ + appui long",
+        "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.": "Forcer à quitter, pour une app figée ou qui ne se ferme pas normalement. Le processus est arrêté aussitôt : le travail non enregistré est perdu. Le Finder n’est jamais forcé à quitter.",
+        "AI agent status": "État des agents IA",
+        "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.": "Pendant qu’un agent (Claude Code, Codex…) travaille, l’icône de l’app où il s’exécute devient un écran en pixels avec des chiffres qui tombent, puis affiche OK ; touchez l’icône pour la masquer. Pour connecter un agent, copiez le prompt sur la page « Pair agents » et collez-le à l’agent. Vous pouvez le désactiver dans les réglages.",
+        "AI agents": "Agents IA",
+        "More": "Plus",
+        "Hide the Dock icon": "Masquer l’icône du Dock",
+        "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Réglages → Général → Masquer l'icône dans le Dock : l’app n’apparaît plus dans le Dock et reste dans la barre des menus. Cliquez sur l’icône de la barre des menus, ou rouvrez l’app depuis Applications, pour afficher son menu.",
     ]
 }

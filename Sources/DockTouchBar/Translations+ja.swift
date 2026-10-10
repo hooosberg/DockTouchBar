@@ -165,5 +165,13 @@ extension Translations {
         "Bundle Identifier mismatch": "バンドルIDの不一致",
         "Developer Team ID mismatch (blocked for security)": "開発者チームIDの不一致(セキュリティのためブロック)",
         "Interface language": "表示言語",
+        "⌥ + long-press": "⌥ + 長押し",
+        "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.": "固まったアプリや通常の方法で終了できないアプリを強制終了します。プロセスを直ちに終了するため、保存していない内容は失われます。Finder は強制終了されません。",
+        "AI agent status": "AI エージェントの状態",
+        "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.": "エージェント（Claude Code、Codex など）が作業中は、それが動いているアプリのアイコンが数字の降るピクセル画面になり、完了すると OK が表示されます。アイコンをタップすると消えます。エージェントを接続するには、「Pair agents」ページでプロンプトをコピーし、エージェントに貼り付けます。設定でオフにできます。",
+        "AI agents": "AI エージェント",
+        "More": "その他",
+        "Hide the Dock icon": "Dock のアイコンを隠す",
+        "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "設定 → 一般 → Dockでアイコンを非表示：Dock には表示されず、メニューバーに常駐します。メニューを開くには、メニューバーのアイコンをクリックするか、「アプリケーション」からもう一度開きます。",
     ]
 }

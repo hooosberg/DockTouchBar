@@ -165,5 +165,13 @@ extension Translations {
         "Bundle Identifier mismatch": "Несоответствие идентификатора пакета",
         "Developer Team ID mismatch (blocked for security)": "Несоответствие идентификатора команды разработчика (заблокировано в целях безопасности)",
         "Interface language": "Язык интерфейса",
+        "⌥ + long-press": "⌥ + долгое нажатие",
+        "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.": "Принудительное завершение — для зависшего приложения или такого, которое не закрывается обычным способом. Процесс завершается сразу, поэтому несохранённые данные пропадут. Finder принудительно не завершается.",
+        "AI agent status": "Статус ИИ-агентов",
+        "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.": "Пока агент (Claude Code, Codex…) работает, значок приложения, в котором он запущен, превращается в пиксельный экран с падающими цифрами, а по завершении показывает OK; нажмите на значок, чтобы убрать его. Чтобы подключить агента, скопируйте промпт на странице «Pair agents» и вставьте его агенту. В настройках это можно отключить.",
+        "AI agents": "ИИ-агенты",
+        "More": "Ещё",
+        "Hide the Dock icon": "Скрыть значок в Dock",
+        "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Параметры → Основные → Скрыть значок в Dock: приложение не показывается в Dock и остаётся в строке меню. Нажмите на значок в строке меню или снова откройте приложение из «Программ», чтобы вызвать его меню.",
     ]
 }

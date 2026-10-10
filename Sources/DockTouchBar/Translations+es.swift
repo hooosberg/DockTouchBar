@@ -165,5 +165,13 @@ extension Translations {
         "Bundle Identifier mismatch": "Identificador de bundle no coincide",
         "Developer Team ID mismatch (blocked for security)": "El ID del equipo del desarrollador no coincide (bloqueado por seguridad)",
         "Interface language": "Idioma de la interfaz",
+        "⌥ + long-press": "⌥ + pulsación larga",
+        "Force quit, for an app that is frozen or won't quit normally. It ends the process right away, so unsaved work is lost. Finder is never force quit.": "Forzar salida, para una app bloqueada o que no se cierra normalmente. Termina el proceso al instante, así que se pierde el trabajo sin guardar. El Finder nunca se fuerza a salir.",
+        "AI agent status": "Estado de agentes de IA",
+        "While an agent (Claude Code, Codex…) works, the icon of the app it runs in turns into a pixel screen with falling digits, then shows OK when it's done; tap the icon to dismiss it. To connect an agent, copy the prompt on the “Pair agents” page and paste it to the agent. You can turn this off in Settings.": "Mientras un agente (Claude Code, Codex…) trabaja, el icono de la app donde se ejecuta se convierte en una pantalla de píxeles con dígitos que caen y luego muestra OK; toca el icono para quitarlo. Para conectar un agente, copia el prompt en la página «Pair agents» y pégaselo al agente. Puedes desactivarlo en Ajustes.",
+        "AI agents": "Agentes de IA",
+        "More": "Más",
+        "Hide the Dock icon": "Ocultar el icono del Dock",
+        "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Ajustes → General → Ocultar icono en el Dock: deja de aparecer en el Dock y queda en la barra de menús. Haz clic en el icono de la barra de menús, o vuelve a abrir la app desde Aplicaciones, para ver su menú.",
     ]
 }
