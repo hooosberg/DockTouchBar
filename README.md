@@ -154,7 +154,6 @@ Resources/              Info.plist, app icon
 scripts/                build.sh, install.sh, make-dmg.sh, make-icon.swift
 tools/                  Diagnostics, agent-pairing checks, README render scripts
 assets/                 README images
-docs/                   Development notes (docs/BRANCHES.md: one codebase, one branch)
 ```
 
 Contributions go through pull requests to `main`.

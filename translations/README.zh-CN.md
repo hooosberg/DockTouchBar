@@ -154,7 +154,6 @@ Resources/              Info.plist、App 图标
 scripts/                build.sh, install.sh, make-dmg.sh, make-icon.swift
 tools/                  诊断工具、智能体配对检查、README 渲染脚本
 assets/                 README 图片
-docs/                   开发笔记（docs/BRANCHES.md：一份代码、一个分支）
 ```
 
 贡献代码请通过 Pull Request 提交到 `main` 分支。
