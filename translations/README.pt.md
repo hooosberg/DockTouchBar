@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **Duas edições:** o DockTouchBar padrão e o DockTouchBar Vibe, que mostra em tempo real o estado dos seus agentes de programação com IA nos ícones. Diferenças e downloads: [English README](../README.md#two-editions).
+> **Um único app:** o DockTouchBar mostra nos ícones o estado em tempo real dos seus agentes de programação com IA (pode ser desativado nos Ajustes). O antigo «DockTouchBar Vibe» foi integrado aqui. Detalhes e download: [English README](../README.md#one-app).
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">

@@ -35,7 +35,7 @@ final class UpdateManager: NSObject, ObservableObject {
     private var currentTempDir: URL?
     private var downloadObservation: NSKeyValueObservation?
 
-    private let releasesAPI = URL(string: "https://api.github.com/repos/hooosberg/DockTouchBar/releases?per_page=30")!
+    private let releasesAPI = URL(string: "https://api.github.com/repos/hooosberg/DockTouchBar/releases/latest")!
 
     override init() {
         super.init()
@@ -73,12 +73,8 @@ final class UpdateManager: NSObject, ObservableObject {
                     self.fallbackCheck(silent: silent, failure: L10n.tr("更新服务器响应异常", "Update server returned an error"))
                     return
                 }
-                // 同一个仓库里纯净版和 Vibecoding 版的发布混在一起，只取本版本标签前缀的最新一条。
                 guard let data,
-                      let list = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]],
-                      let json = list.first(where: {
-                          ($0["draft"] as? Bool) != true && (($0["tag_name"] as? String) ?? "").hasPrefix(AppInfo.releaseTagPrefix)
-                      }) else {
+                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                     self.fallbackCheck(silent: silent, failure: L10n.tr("解析更新信息失败", "Failed to parse update info"))
                     return
                 }
@@ -88,31 +84,29 @@ final class UpdateManager: NSObject, ObservableObject {
         }.resume()
     }
 
-    /// 备用检查：API 被限流时，读 github.com/…/releases.atom（不限流），取本版本标签前缀的最新一条。
-    /// 安装包地址按发布约定 `<文件名>-<版本>.dmg` 拼出。拿不到更新说明和文件大小。
+    /// 备用检查：请求 github.com/…/releases/latest 网页，跟随重定向后从最终地址 `/releases/tag/<tag>` 取版本号，
+    /// 安装包地址按发布约定 `DockTouchBar-<版本>.dmg` 拼出。拿不到更新说明和文件大小，但不受 API 限流影响。
     private func fallbackCheck(silent: Bool, failure: String) {
-        let feed = AppInfo.repositoryURL.appendingPathComponent("releases.atom")
-        var request = URLRequest(url: feed, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
+        let page = AppInfo.repositoryURL.appendingPathComponent("releases/latest")
+        var request = URLRequest(url: page, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
+        request.httpMethod = "HEAD"
         request.setValue("DockTouchBar/\(AppInfo.version)", forHTTPHeaderField: "User-Agent")
-        URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
+        URLSession.shared.dataTask(with: request) { [weak self] _, response, _ in
             DispatchQueue.main.async {
                 guard let self else { return }
-                let pattern = "/releases/tag/(\(NSRegularExpression.escapedPattern(for: AppInfo.releaseTagPrefix))[^\"<]+)"
-                guard let data, let text = String(data: data, encoding: .utf8),
-                      let match = text.range(of: pattern, options: .regularExpression) else {
+                guard let final = response?.url, final.pathComponents.contains("tag"),
+                      let tag = final.pathComponents.last, !tag.isEmpty else {
                     self.state = silent ? .idle : .failed(failure)
                     return
                 }
-                let tag = String(text[match].dropFirst("/releases/tag/".count))
-                let version = String(tag.dropFirst(AppInfo.releaseTagPrefix.count))
-                let assetName = "\(AppInfo.fileName)-\(version).dmg"
-                let page = AppInfo.repositoryURL.appendingPathComponent("releases/tag/\(tag)")
+                let version = tag.trimmingCharacters(in: CharacterSet(charactersIn: "vV \t\n"))
+                let assetName = "\(AppInfo.name)-\(version).dmg"
                 let download = AppInfo.repositoryURL.appendingPathComponent("releases/download/\(tag)/\(assetName)")
                 self.parseReleaseResponse([
                     "tag_name": tag,
                     "name": "\(AppInfo.name) \(version)",
                     "body": "",
-                    "html_url": page.absoluteString,
+                    "html_url": final.absoluteString,
                     "assets": [["name": assetName, "browser_download_url": download.absoluteString, "size": 0]],
                 ], silent: silent)
             }
@@ -121,8 +115,7 @@ final class UpdateManager: NSObject, ObservableObject {
 
     private func parseReleaseResponse(_ json: [String: Any], silent: Bool) {
         let tagName = (json["tag_name"] as? String) ?? ""
-        let cleanVersion = (tagName.hasPrefix(AppInfo.releaseTagPrefix) ? String(tagName.dropFirst(AppInfo.releaseTagPrefix.count)) : tagName)
-            .trimmingCharacters(in: CharacterSet(charactersIn: "vV \t\n"))
+        let cleanVersion = tagName.trimmingCharacters(in: CharacterSet(charactersIn: "vV \t\n"))
         let currentVersion = AppInfo.version.trimmingCharacters(in: CharacterSet(charactersIn: "vV \t\n"))
 
         guard !cleanVersion.isEmpty else {
@@ -324,12 +317,12 @@ final class UpdateManager: NSObject, ObservableObject {
             if (try? detachProcess.run()) != nil { detachProcess.waitUntilExit() }
         }
 
-        let mountedAppURL = URL(fileURLWithPath: mount).appendingPathComponent("\(AppInfo.fileName).app")
+        let mountedAppURL = URL(fileURLWithPath: mount).appendingPathComponent("DockTouchBar.app")
         guard FileManager.default.fileExists(atPath: mountedAppURL.path) else {
             throw UpdateError.appNotFoundInPackage
         }
 
-        let targetAppURL = workingDir.appendingPathComponent("\(AppInfo.fileName).app")
+        let targetAppURL = workingDir.appendingPathComponent("DockTouchBar.app")
         if FileManager.default.fileExists(atPath: targetAppURL.path) {
             try? FileManager.default.removeItem(at: targetAppURL)
         }
@@ -359,7 +352,7 @@ final class UpdateManager: NSObject, ObservableObject {
             throw UpdateError.failedToExtractZIP
         }
 
-        let appURL = workingDir.appendingPathComponent("\(AppInfo.fileName).app")
+        let appURL = workingDir.appendingPathComponent("DockTouchBar.app")
         guard FileManager.default.fileExists(atPath: appURL.path) else {
             throw UpdateError.appNotFoundInPackage
         }
@@ -386,7 +379,7 @@ final class UpdateManager: NSObject, ObservableObject {
         guard let infoData = try? Data(contentsOf: URL(fileURLWithPath: infoPlistPath)),
               let infoPlist = try? PropertyListSerialization.propertyList(from: infoData, options: [], format: nil) as? [String: Any],
               let bundleID = infoPlist["CFBundleIdentifier"] as? String,
-              bundleID == AppInfo.bundleID else {
+              bundleID == "com.maohuhu.docktouchbar" else {
             throw UpdateError.bundleIDMismatch
         }
 
@@ -458,8 +451,8 @@ final class UpdateManager: NSObject, ObservableObject {
         case "$DEST" in /*.app) ;; *) exit 64 ;; esac
         [ -d "$SRC" ] && [ -d "$DEST" ] && [ -d "$TEMP" ] || exit 1
         PARENT="$(dirname "$DEST")"
-        STAGE="$PARENT/.DockTouchBarVibe-update-$$.app"
-        BACKUP="$PARENT/.DockTouchBarVibe-backup-$$.app"
+        STAGE="$PARENT/.DockTouchBar-update-$$.app"
+        BACKUP="$PARENT/.DockTouchBar-backup-$$.app"
         MOVED_OLD=0
         cleanup() {
             STATUS=$?
@@ -599,7 +592,7 @@ enum UpdateError: LocalizedError {
         case .failedToFindMountPoint:
             return L10n.tr("找不到镜像挂载路径", "Failed to locate DMG mount point")
         case .appNotFoundInPackage:
-            return L10n.tr("安装包中未找到应用实体", "\(AppInfo.fileName).app not found in package")
+            return L10n.tr("安装包中未找到应用实体", "DockTouchBar.app not found in package")
         case .failedToCopyApp:
             return L10n.tr("解压应用失败", "Failed to extract application")
         case .failedToExtractZIP:

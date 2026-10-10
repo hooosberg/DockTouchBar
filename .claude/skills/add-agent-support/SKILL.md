@@ -1,11 +1,11 @@
 ---
 name: add-agent-support
-description: 给 DockTouchBar Vibe 增加对一个新的 AI 编程助手（Claude Code、Codex 之外，比如 Gemini CLI、Cursor 等）的支持，或调整图标上的状态动画（字符雨、OK、CRT 屏幕外框）。只在 vibecoding 分支做。
+description: 给 DockTouchBar 增加对一个新的 AI 编程助手（Claude Code、Codex 之外，比如 Gemini CLI、Cursor 等）的支持，或调整图标上的状态动画（字符雨、OK、CRT 屏幕外框）。只在 vibecoding 分支做。
 ---
 
-# 给 Vibecoding 版接入一个新助手 / 调整状态动画
+# 给 DockTouchBar 接入一个新助手 / 调整状态动画
 
-只在 `vibecoding` 分支做，不动 `main`（纯净版）。先 `git branch --show-current` 确认。
+从 `main` 拉功能分支，改完走 PR 合回 `main`。
 
 ## 现在只有一条路：提示词配对
 
@@ -16,7 +16,7 @@ App 不再替任何助手改配置（早期的 Claude Code / Codex 内置连接�
 
 ## 它是怎么工作的（别重新发明）
 
-1. 智能体的 hook（或它按指令手动）执行 `~/Library/Application Support/DockTouchBarVibe/agent-hook.sh <事件> [id] [会话id] < /dev/null`。
+1. 智能体的 hook（或它按指令手动）执行 `~/Library/Application Support/DockTouchBar/agent-hook.sh <事件> [id] [会话id] < /dev/null`。
 2. 脚本把 `事件[|id] \t 父进程号 \t JSON` 一行写进 Unix socket。手动调用时 JSON 是 `{"session_id":…,"manual":true}`。
 3. `AgentMonitor` 从父进程号一路往上找到第一个有 Dock 图标的 App，按 App 汇总 `idle / working / done`。
 4. `DockModel` 把状态写进 `DockTile.agentState`，`DockTileView` 交给 `AgentOverlayLayer`（`AgentOverlay.swift`）画动画。动画和状态机跟具体智能体无关。
@@ -51,8 +51,8 @@ App 不再替任何助手改配置（早期的 Claude Code / Codex 内置连接�
 
 ## 排查“没反应 / 卡住”
 
-0. **先自检 / 验证**：`--verify <id>` 由 App 判定 PASS/FAIL（找不到宿主 App 就 FAIL，什么也不记）。自检：`"~/Library/Application Support/DockTouchBarVibe/agent-hook.sh" --check <id> < /dev/null`，输出 `OK` + `host_app=…` 说明链路通且找到了所在 App；`NOT_RUNNING` = App 没开；`host_app=NOT_FOUND` = 进程链找不到有 Dock 图标的 App。配对提示词第 0 步也让智能体先跑它。脚本的 socket 路径可用环境变量 `DTB_SOCKET` 覆盖（测试用）。
-1. `~/Library/Application Support/DockTouchBarVibe/events.log`：没有新行 = hook 没执行；有行但 `app=-` = 进程链没找到 App。
+0. **先自检 / 验证**：`--verify <id>` 由 App 判定 PASS/FAIL（找不到宿主 App 就 FAIL，什么也不记）。自检：`"~/Library/Application Support/DockTouchBar/agent-hook.sh" --check <id> < /dev/null`，输出 `OK` + `host_app=…` 说明链路通且找到了所在 App；`NOT_RUNNING` = App 没开；`host_app=NOT_FOUND` = 进程链找不到有 Dock 图标的 App。配对提示词第 0 步也让智能体先跑它。脚本的 socket 路径可用环境变量 `DTB_SOCKET` 覆盖（测试用）。
+1. `~/Library/Application Support/DockTouchBar/events.log`：没有新行 = hook 没执行；有行但 `app=-` = 进程链没找到 App。
 2. 设置页配对列表底部的“清除动画状态”；每行的“试一下”在它的所在 App 图标上放 4 秒动画（不用等智能体跑任务）。
 3. Claude 桌面版里多个会话共用一个图标，任何一个会话卡在“工作中”整个图标都会动。
 
@@ -82,5 +82,4 @@ App 图标：改 `scripts/make-icon.swift` 后 `bash scripts/make-icon.sh`，再
 ## 提交前
 
 - `swift build` 通过、`bash tools/verify-agent-hooks.sh` 全 PASS。
-- `bash scripts/install.sh` 装到 `/Applications/DockTouchBarVibe.app`，确认进程在跑。
-- 纯净版在运行时 Vibecoding 版会提示并退出（两者抢 Touch Bar）；测试前先退出纯净版。
+- `bash scripts/install.sh` 装到 `/Applications/DockTouchBar.app`，确认进程在跑。

@@ -1,5 +1,5 @@
 #!/bin/bash
-# 打包 build/DockTouchBarVibe-<版本>.dmg：打开后把 App 拖进「应用程序」即可安装。
+# 打包 build/DockTouchBar-<版本>.dmg：打开后把 App 拖进「应用程序」即可安装。
 #
 # 不带参数：用 Developer ID 签名 App 和 DMG，带可信时间戳（需要联网），不公证。
 # 要发给别人用，需要公证。先存一次凭据（按提示输入 Apple ID、App 专用密码、Team ID，密码存进钥匙串）：
@@ -23,9 +23,9 @@ fi
 
 RELEASE=1 scripts/build.sh
 
-APP="build/DockTouchBarVibe.app"
+APP="build/DockTouchBar.app"
 VERSION="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP/Contents/Info.plist")"
-DMG="build/DockTouchBarVibe-$VERSION.dmg"
+DMG="build/DockTouchBar-$VERSION.dmg"
 STAGING="build/dmg-staging"
 SIGN_AUTHORITY="$(codesign -dvv "$APP" 2>&1 | awk -F= '/^Authority=/ && !found {print $2; found = 1}')"
 
@@ -47,7 +47,7 @@ if [ -n "$NOTARY_PROFILE" ]; then
         "Developer ID"*) ;;
         *) echo "公证需要 Developer ID 证书签名，当前是：${SIGN_AUTHORITY:-ad-hoc}" >&2; exit 1 ;;
     esac
-    ZIP="build/DockTouchBarVibe-notarize.zip"
+    ZIP="build/DockTouchBar-notarize.zip"
     rm -f "$ZIP"
     ditto -c -k --keepParent "$APP" "$ZIP"
     notarize "$ZIP"
@@ -59,7 +59,7 @@ rm -rf "$STAGING" "$DMG"
 mkdir -p "$STAGING"
 cp -R "$APP" "$STAGING/"
 ln -s /Applications "$STAGING/Applications"
-hdiutil create -volname "DockTouchBar Vibe $VERSION" -srcfolder "$STAGING" -ov -format UDZO "$DMG" >/dev/null
+hdiutil create -volname "DockTouchBar $VERSION" -srcfolder "$STAGING" -ov -format UDZO "$DMG" >/dev/null
 rm -rf "$STAGING"
 
 case "$SIGN_AUTHORITY" in

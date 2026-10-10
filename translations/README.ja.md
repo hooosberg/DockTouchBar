@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **2 つのエディション：** 標準版 DockTouchBar と、AI コーディングエージェントの状況をアイコンにリアルタイム表示する DockTouchBar Vibe。違いとダウンロードは [English README](../README.md#two-editions) をご覧ください。
+> **1 つのアプリに統一：** DockTouchBar は AI コーディングエージェントの状態をアイコン上にリアルタイム表示します（設定でオフにできます）。以前の「DockTouchBar Vibe」はこのアプリに統合されました。詳細とダウンロード：[English README](../README.md#one-app)。
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">

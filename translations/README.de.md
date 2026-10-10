@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **Zwei Editionen:** das normale DockTouchBar und DockTouchBar Vibe, das den Live-Status Ihrer KI-Coding-Agenten auf deren Symbolen zeigt. Unterschiede und Downloads: [English README](../README.md#two-editions).
+> **Ein einziges Programm:** DockTouchBar zeigt auf den Symbolen live den Status Ihrer KI-Coding-Agenten an (in den Einstellungen abschaltbar). Das frühere „DockTouchBar Vibe“ wurde hier integriert. Details und Download: [English README](../README.md#one-app).
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">

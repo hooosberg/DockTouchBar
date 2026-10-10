@@ -16,13 +16,9 @@
 </p>
 
 <p align="center">
-  <strong>Two apps, two downloads:</strong>
+  <a href="https://github.com/hooosberg/DockTouchBar/releases/latest"><strong>⬇ Download DockTouchBar</strong></a>
   <br>
-  <a href="https://github.com/hooosberg/DockTouchBar/releases/latest"><strong>⬇ DockTouchBar</strong></a> (Standard: your Dock on the Touch Bar)
-  &nbsp;·&nbsp;
-  <a href="https://github.com/hooosberg/DockTouchBar/releases/tag/vibe-v1.23"><strong>⬇ DockTouchBar Vibe</strong></a> (adds live AI agent status on the icons)
-  <br>
-  <sub>Not sure which? Start with Standard. <a href="#two-editions">What's the difference and where to download?</a></sub>
+  <sub>Your Dock on the Touch Bar, with live status for your AI coding agents. One app, one download.</sub>
 </p>
 
 <p align="center">
@@ -48,22 +44,13 @@
   <img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-1e88e5.svg" alt="PolyForm Noncommercial">
 </p>
 
-## Two editions
+## One app
 
-| | **DockTouchBar** (Standard) | **DockTouchBar Vibe** |
-|---|---|---|
-| For | Everyone with a Touch Bar Mac | People who code with AI agents (Claude Code, Codex, Qoder, WorkBuddy, Antigravity…) |
-| What it is | Your Dock on the Touch Bar: tap, double-tap, long-press | Everything in Standard, plus a live status on the icon of the app your AI agent runs in: a pixel-art screen with falling digits while it works, **OK** when it's done |
-| Download | [**Download Standard**](https://github.com/hooosberg/DockTouchBar/releases/latest) | [**Download Vibe 1.23**](https://github.com/hooosberg/DockTouchBar/releases/tag/vibe-v1.23) |
+DockTouchBar is your Dock on the Touch Bar: tap, double-tap, long-press. If you code with AI agents (Claude Code, Codex, Qoder, WorkBuddy, Antigravity…), it also shows a live status on the icon of the app each agent runs in: a pixel-art screen with falling digits while it works, **OK** when it's done. The agent status can be switched off in Settings.
 
-**Where to download**
+**Download:** the [**Releases** page](https://github.com/hooosberg/DockTouchBar/releases/latest), file `DockTouchBar-<version>.dmg`.
 
-- **Standard** → the repository's [**Releases** page](https://github.com/hooosberg/DockTouchBar/releases/latest) (the release marked **Latest**, also shown in the right sidebar of this page). Download `DockTouchBar-<version>.dmg`.
-- **Vibe** → its own release, [**Vibe 1.23**](https://github.com/hooosberg/DockTouchBar/releases/tag/vibe-v1.23). Download `DockTouchBarVibe-<version>.dmg` from **Assets**. GitHub's sidebar can only show one "Latest", so Vibe is not shown there; use this link, or find it in the full [Releases list](https://github.com/hooosberg/DockTouchBar/releases) (releases named "Vibe").
-
-**Not sure? Start with Standard.** Pick **Vibe** if you use AI coding agents on this Mac and want to see, right on the Touch Bar, which one is busy and which one has just finished. Vibe is a separate app with its own name, settings and updates, and it already includes the whole Dock, so you only need one of the two. They both take the Touch Bar, so run one at a time (Vibe tells you if the Standard one is running). Both come from this repository: Standard is the `main` branch, Vibe is the `vibecoding` branch.
-
-Vibe 1.23 shares Standard 1.23's window centering and maximizing code. Their version numbers are aligned; each app keeps its own settings and update channel.
+*Coming from "DockTouchBar Vibe"?* Vibe has been merged into this app (version 1.24 and later). Download DockTouchBar above, quit and delete DockTouchBar Vibe, and your already-paired agents keep working. Settings are not carried over, because the two apps had different bundle identifiers.
 
 ![DockTouchBar on the Touch Bar](assets/touchbar-idle.gif)
 *Idle state: apps aligned to bottom with top-right active badge dot (red for frontmost app); pixel-art coffee cup with live rising steam.*
@@ -86,10 +73,10 @@ Engineered for 24/7 background residency using event-driven app and window updat
 
 **If DockTouchBar is useful to you, a ⭐ Star on GitHub is the best way to say thanks.**
 
-## DockTouchBar Vibe: see your AI agents work
+## See your AI agents work
 
 ![AI coding agents on the Touch Bar: idle, working, done](assets/vibe-agents.gif)
-*Vibe: the icon of the app an agent runs in turns into a little pixel-art screen with falling digits while the agent works, then shows **OK** when it's done. Tap the icon to dismiss it. The five icons here are Claude Code, Codex, Qoder, WorkBuddy and Antigravity.*
+*The icon of the app an agent runs in turns into a little pixel-art screen with falling digits while the agent works, then shows **OK** when it's done. Tap the icon to dismiss it. The five icons here are Claude Code, Codex, Qoder, WorkBuddy and Antigravity.*
 
 - **No agent-specific plugins.** You don't wait for us to support your tool: copy one prompt, paste it to your agent, and it connects itself.
 - The animation is drawn by the app, from the real icon of whatever app the agent runs in, so it works for tools we have never seen. Nothing is pre-made per agent.
@@ -98,8 +85,8 @@ Engineered for 24/7 background residency using event-driven app and window updat
 **Pair an agent in three steps**
 
 1. Open **Settings → Pair agents** and press **Copy prompt**.
-2. Paste it to your agent (any agent that can run commands on your Mac). It checks itself first, then connects the best way it can: through its own hooks, or, if it has none, through a rule in its long-term instructions; for apps Vibe can watch by itself it changes nothing at all. It backs up its config first and tells you every step.
-3. Vibe itself decides whether verification passed (the agent can't mark itself as verified), and only then does the agent appear in the list with **Verified**. From then on, its icon animates while it works. **Try it** plays the animation without waiting for a task, and **Copy unpair prompt** hands the agent a prompt that undoes its own changes.
+2. Paste it to your agent (any agent that can run commands on your Mac). It checks itself first, then connects the best way it can: through its own hooks, or, if it has none, through a rule in its long-term instructions; for apps DockTouchBar can watch by itself it changes nothing at all. It backs up its config first and tells you every step.
+3. DockTouchBar itself decides whether verification passed (the agent can't mark itself as verified), and only then does the agent appear in the list with **Verified**. From then on, its icon animates while it works. **Try it** plays the animation without waiting for a task, and **Copy unpair prompt** hands the agent a prompt that undoes its own changes.
 
 ![Pair agents page](assets/vibe-pairing-en.png)
 
@@ -121,8 +108,8 @@ What to know:
 | WorkBuddy | its own hooks | |
 | Antigravity | a rule in its long-term instructions (`GEMINI.md`) | No hooks, so it relies on the agent following the rule |
 | Qwen Work (千问办公) | a rule in its long-term instructions | Same |
-| Doubao Work (豆包) | Vibe reads its session files, read-only | Nothing in Doubao is changed |
-| **Anything else** | paste the prompt | It picks hooks or an instruction rule and reports back. If it can't reach Vibe, it is told to say so instead of claiming success |
+| Doubao Work (豆包) | DockTouchBar reads its session files, read-only | Nothing in Doubao is changed |
+| **Anything else** | paste the prompt | It picks hooks or an instruction rule and reports back. If it can't reach DockTouchBar, it is told to say so instead of claiming success |
 
 All of the above were tried on the author's Mac only. Pairing safety: the prompt tells the agent to back up first, only add (never remove) settings, stop and show you the raw output when anything differs from what it expects, and never fake a verification.
 
@@ -195,7 +182,7 @@ Things to know:
 
 ## Install
 
-1. Download `DockTouchBar-<version>.dmg` from [Releases](https://github.com/hooosberg/DockTouchBar/releases/latest). (For **Vibe**, download `DockTouchBarVibe-<version>.dmg` from its [release](https://github.com/hooosberg/DockTouchBar/releases/tag/vibe-v1.23) and drag **DockTouchBar Vibe** onto Applications; see [Two editions](#two-editions).)
+1. Download `DockTouchBar-<version>.dmg` from [Releases](https://github.com/hooosberg/DockTouchBar/releases/latest).
 2. Open it and drag **DockTouchBar** onto **Applications**, then launch it. A Dock icon appears in the menu bar and on the Touch Bar.
 
 > The DMG is signed with a Developer ID certificate and **notarized by Apple**, so it opens like any other app. macOS will only ask you to confirm the first launch. Prefer to compile it yourself? See [Build from source](#build-from-source).

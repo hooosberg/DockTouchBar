@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **Deux éditions :** DockTouchBar (standard) et DockTouchBar Vibe, qui affiche en direct l'état de vos agents de codage IA sur leurs icônes. Différences et téléchargements : [English README](../README.md#two-editions).
+> **Une seule app :** DockTouchBar affiche en direct l'état de vos agents de codage IA sur les icônes (désactivable dans les réglages). L'ancien « DockTouchBar Vibe » y est désormais intégré. Détails et téléchargement : [English README](../README.md#one-app).
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">

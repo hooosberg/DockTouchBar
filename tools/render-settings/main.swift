@@ -14,7 +14,7 @@ if let lang = env["RENDER_LANG"] { UserDefaults.standard.set(lang, forKey: Setti
 var cleanup: URL?
 if env["RENDER_FAKE"] == "1" {
     let fm = FileManager.default
-    let support = URL(fileURLWithPath: "/Users/Shared/DockTouchBarVibe", isDirectory: true)
+    let support = URL(fileURLWithPath: "/Users/Shared/DockTouchBar", isDirectory: true)
     cleanup = support
     AgentMonitor.supportDirectory = support
     try? fm.removeItem(at: support)

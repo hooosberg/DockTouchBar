@@ -12,8 +12,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-APP_NAME="DockTouchBarVibe"
-SWIFT_PRODUCT="DockTouchBar"  # SwiftPM 产品名，和打包后的文件名分开
+APP_NAME="DockTouchBar"
 APP="build/$APP_NAME.app"
 # `build/` 只放中间产物；防止 Spotlight 把这里的 .app 当成第二个可启动应用。
 mkdir -p build
@@ -35,7 +34,7 @@ BIN_DIR="$(swift build -c release "${ARCHS[@]}" --show-bin-path)"
 
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$BIN_DIR/$SWIFT_PRODUCT" "$APP/Contents/MacOS/$APP_NAME"
+cp "$BIN_DIR/$APP_NAME" "$APP/Contents/MacOS/$APP_NAME"
 # 去掉调试符号：链接后的二进制里带着编译机器上的源码路径（用户名、目录名）。公开发布前必须去掉，
 # 也顺便让文件更小。这一步要在签名之前做。
 strip -S "$APP/Contents/MacOS/$APP_NAME"

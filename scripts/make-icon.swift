@@ -61,35 +61,6 @@ for (index, hex) in tileColors.enumerated() {
     x += tileSize + gap
 }
 
-// Vibecoding 版标记：右下角一只冒着烟的像素咖啡杯（和 Touch Bar 右侧的咖啡杯按钮同一幅画），和纯净版的图标一眼能分开。
-let coffee = [
-    "....#...#....",
-    "...#...#.....",
-    "....#...#....",
-    ".............",
-    ".#########...",
-    ".#.......####",
-    ".#########..#",
-    ".#########..#",
-    ".############",
-    "..#######....",
-    ".###########.",
-]
-let cell: CGFloat = 18
-let artOrigin = CGPoint(x: 600, y: 150)
-ctx.saveGState()
-ctx.setShadow(offset: CGSize(width: 0, height: -5), blur: 12, color: color(0x000000, 0.6))
-ctx.setFillColor(color(0xFFFFFF))
-ctx.beginTransparencyLayer(auxiliaryInfo: nil)  // 整幅画一起投影，格子之间不会出现缝
-for (row, line) in coffee.enumerated() {
-    for (column, ch) in line.enumerated() where ch == "#" {
-        ctx.fill(CGRect(x: artOrigin.x + CGFloat(column) * cell,
-                        y: artOrigin.y + CGFloat(coffee.count - 1 - row) * cell, width: cell, height: cell))
-    }
-}
-ctx.endTransparencyLayer()
-ctx.restoreGState()
-
 let rep = NSBitmapImageRep(cgImage: ctx.makeImage()!)
 try! rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: output))
 print("Wrote \(output)")

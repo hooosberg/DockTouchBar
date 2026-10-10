@@ -22,6 +22,30 @@ final class AgentMonitor {
         .appendingPathComponent("Library/Application Support/\(AppInfo.fileName)", isDirectory: true)
     static var socketURL: URL { supportDirectory.appendingPathComponent("agent.sock") }
 
+    /// 早期单独发布的 Vibe 版把数据放在 DockTouchBarVibe 目录，已配对智能体的 hook 指向那里。
+    /// 合并成一个 App 后把旧目录搬到新位置，并在原地留一个符号链接，让旧配置继续有效。
+    static func migrateLegacySupportDirectory() {
+        let fm = FileManager.default
+        let base = fm.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support", isDirectory: true)
+        let old = base.appendingPathComponent("DockTouchBarVibe", isDirectory: true)
+        let new = base.appendingPathComponent(AppInfo.fileName, isDirectory: true)
+        guard supportDirectory.path == new.path,
+              (try? fm.destinationOfSymbolicLink(atPath: old.path)) == nil,
+              fm.fileExists(atPath: old.path), !fm.fileExists(atPath: new.appendingPathComponent("agents").path) else { return }
+        try? fm.removeItem(at: new.appendingPathComponent("agent.sock"))
+        if fm.fileExists(atPath: new.path) {
+            guard let items = try? fm.contentsOfDirectory(atPath: old.path) else { return }
+            for item in items where item != "agent.sock" {
+                let target = new.appendingPathComponent(item)
+                if !fm.fileExists(atPath: target.path) { try? fm.moveItem(at: old.appendingPathComponent(item), to: target) }
+            }
+            try? fm.removeItem(at: old)
+        } else {
+            try? fm.moveItem(at: old, to: new)
+        }
+        try? fm.createSymbolicLink(at: old, withDestinationURL: new)
+    }
+
     /// 从 hook 进程号找到会话所在的 App。可以替换，测试时用。
     var ownerResolver: (pid_t) -> String? = AgentMonitor.owningApp(of:)
     /// 状态变了（主线程回调）。

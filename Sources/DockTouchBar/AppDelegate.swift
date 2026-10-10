@@ -31,14 +31,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             NSApp.terminate(nil)
             return
         }
-        // 纯净版在运行时也会抢 Touch Bar，提示后退出。
-        if !NSRunningApplication.runningApplications(withBundleIdentifier: "com.maohuhu.docktouchbar").isEmpty {
-            showAlert(L10n.tr("纯净版 DockTouchBar 正在运行", "The standard DockTouchBar is running"),
-                      L10n.tr("两个版本会抢同一条 Touch Bar。先退出纯净版，再打开 \(AppInfo.name)。",
-                              "Both versions fight over the same Touch Bar. Quit the standard version first, then open \(AppInfo.name)."))
-            NSApp.terminate(nil)
-            return
-        }
         defaults.register(defaults: SettingsKey.defaults)
         settingsWindow.onDiagnose = { [weak self] in self?.showDiagnostics() }
 
@@ -81,6 +73,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     /// 转发脚本任何时候都在（配对提示词要调用它）；早期版本自动连接过的 Claude Code、Codex 补一份登记，列表里才看得到。
     /// App 不再替任何助手改配置：新的接入都走“配对智能体”提示词。
     private func prepareAgentPairing() {
+        AgentMonitor.migrateLegacySupportDirectory()
         try? AgentHookInstaller.refreshScript()
         AgentRegistry.backfillActivityFromLog()
         AgentRegistry.migrateLegacyHooks()

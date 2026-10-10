@@ -4,7 +4,7 @@ set -euo pipefail
 
 MODE="${1:-run}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-APP_NAME="DockTouchBarVibe"
+APP_NAME="DockTouchBar"
 APP_BUNDLE="$ROOT_DIR/build/$APP_NAME.app"
 
 build() {
