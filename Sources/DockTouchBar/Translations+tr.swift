@@ -129,6 +129,7 @@ extension Translations {
         "Yield while Fn is held": "Fn basılı tutulduğu sırada yer ver",
         "When on, the Dock hides temporarily and returns afterward": "Açık olduğunda, Dock geçici olarak gizlenir ve sonra geri döner",
         "General": "Genel",
+        "Hide icon in Dock": "Dock'ta simgeyi gizle",
         "Language": "Dil",
         "Permissions": "İzinler",
         "Accessibility: on": "Erişilebilirlik: açık",

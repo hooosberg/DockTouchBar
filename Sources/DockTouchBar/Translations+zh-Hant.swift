@@ -129,6 +129,7 @@ extension Translations {
         "Yield while Fn is held": "在按住 Fn 時讓出",
         "When on, the Dock hides temporarily and returns afterward": "開啟時，程式塢暫時隱藏，然後返回",
         "General": "一般",
+        "Hide icon in Dock": "在程式塢中隱藏圖示",
         "Language": "語言",
         "Permissions": "權限",
         "Accessibility: on": "輔助使用：開啟",
