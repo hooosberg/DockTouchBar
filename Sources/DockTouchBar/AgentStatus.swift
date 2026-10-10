@@ -32,7 +32,6 @@ final class AgentMonitor {
         guard supportDirectory.path == new.path,
               (try? fm.destinationOfSymbolicLink(atPath: old.path)) == nil,
               fm.fileExists(atPath: old.path), !fm.fileExists(atPath: new.appendingPathComponent("agents").path) else { return }
-        try? fm.removeItem(at: new.appendingPathComponent("agent.sock"))
         if fm.fileExists(atPath: new.path) {
             guard let items = try? fm.contentsOfDirectory(atPath: old.path) else { return }
             for item in items where item != "agent.sock" {

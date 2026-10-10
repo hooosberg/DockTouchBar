@@ -57,6 +57,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         item.menu = menu
         statusItem = item
 
+        AgentMonitor.migrateLegacySupportDirectory()  // 必须在监听 socket 建立之前
         AgentMonitor.shared.start()
         prepareAgentPairing()
         applySettings()
@@ -75,7 +76,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     /// 转发脚本任何时候都在（配对提示词要调用它）；早期版本自动连接过的 Claude Code、Codex 补一份登记，列表里才看得到。
     /// App 不再替任何助手改配置：新的接入都走“配对智能体”提示词。
     private func prepareAgentPairing() {
-        AgentMonitor.migrateLegacySupportDirectory()
         try? AgentHookInstaller.refreshScript()
         AgentRegistry.backfillActivityFromLog()
         AgentRegistry.migrateLegacyHooks()
