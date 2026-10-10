@@ -512,7 +512,13 @@ final class DockBarController: NSObject {
         if longPressDuration > 0, tile.kind == .app, let url = tile.url,
            let app = DockModel.runningApp(bundleID: tile.bundleID, url: url), DockModel.isActuallyRunning(app) {
             let name = app.localizedName ?? url.deletingPathExtension().lastPathComponent
-            let plan = QuitPlanner.plan(for: app)
+            let isOptionDown = NSEvent.modifierFlags.contains(.option)
+            let plan: QuitPlan
+            if isOptionDown, app.bundleIdentifier != "com.apple.finder" {
+                plan = .forceQuitApp
+            } else {
+                plan = QuitPlanner.plan(for: app)
+            }
             newPress.plan = plan
             if case .notice(let message) = plan {
                 // 做不了：直接说明情况，这次长按不再当作点击。
@@ -526,6 +532,7 @@ final class DockBarController: NSObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + remaining, execute: work)
                 (scrubber.itemViewForItem(at: index) as? DockTileView)?.showPressed()
                 switch plan {
+                case .forceQuitApp: quitHint.action = .forceQuit
                 case .closeWindow, .locateAndClose: quitHint.action = .closeWindow
                 case .hideApp: quitHint.action = .hide
                 default: quitHint.action = .quit
@@ -599,8 +606,14 @@ final class DockBarController: NSObject {
         // 单纯没等到变化（可能已经关了，只是比耐心等的时间慢，也可能是真的没响应）就只说明情况，不切过去——
         // 切过去等于激活它，窗口都关完了的 App 一激活常常会自己弹一个新窗口，看起来就像“没关又开了一个”，
         // 其实是我们等得不够久，误会了它。
+        var planToExecute = current.plan
+        if NSEvent.modifierFlags.contains(.option), current.tile.kind == .app, app.bundleIdentifier != "com.apple.finder" {
+            planToExecute = .forceQuitApp
+            quitHint.action = .forceQuit
+        }
+
         quitHint.holdForResult()
-        QuitPlanner.perform(current.plan, on: app) { [weak self] outcome in
+        QuitPlanner.perform(planToExecute, on: app) { [weak self] outcome in
             guard let self else { return }
             switch outcome {
             case .done:
