@@ -188,6 +188,24 @@ private struct SettingsView: View {
             }
             .padding(.top, 3)
 
+            Spacer(minLength: 10)
+            Divider().padding(.horizontal, 40)
+            Text(L10n.tr("致谢", "Thanks")).font(.subheadline.weight(.semibold)).padding(.top, 6)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(AppInfo.contributors) { person in
+                        VStack(alignment: .leading, spacing: 1) {
+                            Link("@\(person.handle)", destination: person.url).font(.caption.weight(.semibold))
+                            Text(L10n.isChinese ? person.zh : person.en).font(.caption).foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 8)
+            }
+            .frame(height: 96)
+
             Spacer(minLength: 14)
             Text(L10n.tr("© 2026 \(AppInfo.author) · 个人使用免费，商业使用需另行授权",
                          "© 2026 \(AppInfo.author) · Free for personal use, commercial use requires a separate license"))

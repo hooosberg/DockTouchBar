@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **Tek uygulama:** DockTouchBar, yapay zekâ kodlama ajanlarınızın durumunu simgelerin üzerinde canlı gösterir (Ayarlar'dan kapatılabilir). Eski «DockTouchBar Vibe» bu uygulamaya dahil edildi. Ayrıntılar ve indirme: [English README](../README.md#one-app).
+> **Tek uygulama:** DockTouchBar, yapay zekâ kodlama ajanlarınızın durumunu simgelerin üzerinde canlı gösterir (Ayarlar'dan kapatılabilir). Eski «DockTouchBar Vibe» bu uygulamaya dahil edildi. Ayrıntılar ve indirme: [English README](../README.md#what-it-is).
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">

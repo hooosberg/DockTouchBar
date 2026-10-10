@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **單一應用程式：** DockTouchBar 會在圖示上即時顯示 AI 程式設計智慧體的狀態（可在設定中關閉）。先前的「DockTouchBar Vibe」已併入此應用程式。詳情與下載：[English README](../README.md#one-app)。
+> **單一應用程式：** DockTouchBar 會在圖示上即時顯示 AI 程式設計智慧體的狀態（可在設定中關閉）。先前的「DockTouchBar Vibe」已併入此應用程式。詳情與下載：[English README](../README.md#what-it-is)。
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">

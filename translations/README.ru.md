@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **Одно приложение:** DockTouchBar показывает на значках статус ваших ИИ-агентов для программирования в реальном времени (можно отключить в настройках). Прежний «DockTouchBar Vibe» объединён с ним. Подробности и загрузка: [English README](../README.md#one-app).
+> **Одно приложение:** DockTouchBar показывает на значках статус ваших ИИ-агентов для программирования в реальном времени (можно отключить в настройках). Прежний «DockTouchBar Vibe» объединён с ним. Подробности и загрузка: [English README](../README.md#what-it-is).
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">

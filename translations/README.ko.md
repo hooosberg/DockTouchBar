@@ -31,7 +31,7 @@
   <a href="README.tr.md">Türkçe</a>
 </p>
 
-> **하나의 앱으로 통합:** DockTouchBar는 AI 코딩 에이전트의 상태를 아이콘에 실시간으로 표시합니다(설정에서 끌 수 있음). 이전의 「DockTouchBar Vibe」는 이 앱에 통합되었습니다. 자세한 내용과 다운로드: [English README](../README.md#one-app).
+> **하나의 앱으로 통합:** DockTouchBar는 AI 코딩 에이전트의 상태를 아이콘에 실시간으로 표시합니다(설정에서 끌 수 있음). 이전의 「DockTouchBar Vibe」는 이 앱에 통합되었습니다. 자세한 내용과 다운로드: [English README](../README.md#what-it-is).
 
 <p align="center">
   <img src="https://img.shields.io/badge/macOS-13%2B-444.svg" alt="macOS 13+">
