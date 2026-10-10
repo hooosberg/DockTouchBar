@@ -129,6 +129,7 @@ extension Translations {
         "Yield while Fn is held": "Ceder enquanto Fn é segurado",
         "When on, the Dock hides temporarily and returns afterward": "Quando ativado, o Dock se oculta temporariamente e retorna depois",
         "General": "Geral",
+        "Hide icon in Dock": "Ocultar ícone no Dock",
         "Language": "Idioma",
         "Permissions": "Permissões",
         "Accessibility: on": "Acessibilidade: ativada",
