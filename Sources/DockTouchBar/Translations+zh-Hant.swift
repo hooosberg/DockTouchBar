@@ -173,5 +173,13 @@ extension Translations {
         "More": "其他",
         "Hide the Dock icon": "隱藏程式塢圖示",
         "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "設定 → 一般 → 在程式塢中隱藏圖示：Dock 裡不再顯示，只在選單列常駐。要開啟選單時點選單列圖示，或再次從「應用程式」開啟。",
+        "Icon position": "圖示位置",
+        "Left": "靠左",
+        "Center": "置中",
+        "Right": "靠右",
+        "Every {0} s": "每 {0} 秒",
+        "Re-check and restore after yielding": "讓位後自動核對並恢復",
+        "When on, the Dock hides temporarily and returns afterward. If the release of Fn or the end of a capture is missed, the Dock comes back on its own within this time; it never returns early while Fn is still held.": "開啟時 Dock 會暫時隱藏，結束後自動恢復。萬一放開 Fn 或結束截圖的事件遺失，Dock 會在這個時間內自己回來；Fn 還按著時不會提前恢復。",
+        "Centers the icons when they fit (align right is in Settings); once they overflow the Touch Bar they start from the left and scroll": "圖示放得下時置中（靠右可在設定中選擇）；超出 Touch Bar 寬度時仍從左邊開始滑動",
     ]
 }

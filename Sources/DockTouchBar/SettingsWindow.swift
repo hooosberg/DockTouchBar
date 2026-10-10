@@ -489,7 +489,9 @@ private struct SettingsForm: View {
 
     @AppStorage(SettingsKey.enabled) private var enabled = true
     @AppStorage(SettingsKey.showPinned) private var showPinned = true
+    @AppStorage(SettingsKey.iconAlignment) private var alignmentRaw = ""
     @AppStorage(SettingsKey.centerIcons) private var centerIcons = true
+    @AppStorage(SettingsKey.yieldRecheck) private var yieldRecheck = 5
     @AppStorage(SettingsKey.iconSpacing) private var spacing = 4
     @AppStorage(SettingsKey.showCenterButton) private var showCenterButton = true
     @AppStorage(SettingsKey.centerHeight) private var centerHeight = 80
@@ -518,7 +520,13 @@ private struct SettingsForm: View {
                     .disabled(!TouchBarBridge.isAvailable)
                 Toggle(L10n.tr("只显示正在运行的 App", "Only show running apps"),
                        isOn: Binding(get: { !showPinned }, set: { showPinned = !$0 }))
-                Toggle(L10n.tr("图标居中显示", "Center the icons"), isOn: $centerIcons)
+                Picker(L10n.tr("图标位置", "Icon position"), selection: Binding(
+                    get: { IconAlignment(rawValue: alignmentRaw) ?? (centerIcons ? .center : .left) },
+                    set: { IconAlignment.set($0) })) {
+                    Text(L10n.tr("靠左", "Left")).tag(IconAlignment.left)
+                    Text(L10n.tr("居中", "Center")).tag(IconAlignment.center)
+                    Text(L10n.tr("靠右", "Right")).tag(IconAlignment.right)
+                }
                 Picker(L10n.tr("图标间距", "Icon spacing"), selection: $spacing) {
                     ForEach(SettingsOptions.spacing, id: \.self) { Text("\($0)pt").tag($0) }
                 }
@@ -564,7 +572,13 @@ private struct SettingsForm: View {
             Section(L10n.tr("系统 Touch Bar 避让", "Yield to system Touch Bar controls")) {
                 Toggle(L10n.tr("截图 / 录屏时自动避让", "Yield during screenshots / recording"), isOn: $yieldCapture)
                 Toggle(L10n.tr("按住 Fn 时自动避让", "Yield while Fn is held"), isOn: $yieldFn)
-                Text(L10n.tr("开启时 Dock 临时隐藏，结束后自动恢复", "When on, the Dock hides temporarily and returns afterward"))
+                Picker(L10n.tr("避让后自动核对并恢复", "Re-check and restore after yielding"), selection: $yieldRecheck) {
+                    ForEach(SettingsOptions.recheck, id: \.self) {
+                        Text($0 == 0 ? L10n.tr("关闭", "Off") : L10n.tr("每 \($0) 秒", "Every \($0) s")).tag($0)
+                    }
+                }
+                Text(L10n.tr("开启时 Dock 临时隐藏，结束后自动恢复。万一松开 Fn 或结束截图的事件丢了，Dock 会在这个时间内自己回来；Fn 还按着时不会提前恢复。",
+                             "When on, the Dock hides temporarily and returns afterward. If the release of Fn or the end of a capture is missed, the Dock comes back on its own within this time; it never returns early while Fn is still held."))
                     .font(.caption).foregroundStyle(.secondary)
             }
 

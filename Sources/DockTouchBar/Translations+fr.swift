@@ -173,5 +173,13 @@ extension Translations {
         "More": "Plus",
         "Hide the Dock icon": "Masquer l’icône du Dock",
         "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Réglages → Général → Masquer l'icône dans le Dock : l’app n’apparaît plus dans le Dock et reste dans la barre des menus. Cliquez sur l’icône de la barre des menus, ou rouvrez l’app depuis Applications, pour afficher son menu.",
+        "Icon position": "Position des icônes",
+        "Left": "Gauche",
+        "Center": "Centre",
+        "Right": "Droite",
+        "Every {0} s": "Toutes les {0} s",
+        "Re-check and restore after yielding": "Revérifier et rétablir après s'être effacé",
+        "When on, the Dock hides temporarily and returns afterward. If the release of Fn or the end of a capture is missed, the Dock comes back on its own within this time; it never returns early while Fn is still held.": "Si activé, le Dock se masque temporairement puis revient. Si le relâchement de Fn ou la fin d'une capture est manqué, le Dock revient seul dans ce délai ; il ne revient jamais trop tôt tant que Fn est maintenue.",
+        "Centers the icons when they fit (align right is in Settings); once they overflow the Touch Bar they start from the left and scroll": "Centre les icônes quand elles tiennent (alignement à droite dans les réglages) ; si elles dépassent la Touch Bar, elles commencent à gauche et défilent",
     ]
 }

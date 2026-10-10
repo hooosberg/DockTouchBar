@@ -90,17 +90,21 @@ func scrubberLeft() -> CGFloat { container.convert(scrubber.bounds, from: scrubb
 func scrubberWidth() -> CGFloat { scrubber.frame.width }
 
 // 少量图标：居中
-controller.centersIcons = true
+controller.iconAlignment = .center
 show([tile(1), tile(2), .divider, .trash])
 let contentW = CGFloat(2) * 40 + 13 + 40 + 3 * controller.iconSpacing
 let available: CGFloat = 1000 - 88
 check(abs(scrubberWidth() - contentW) < 2, "Few icons: scrubber is exactly as wide as the icons")
 check(abs(scrubberLeft() - (available - contentW) / 2) < 2, "Few icons: centered in the icon area (left=\(scrubberLeft()))")
 assertClean("few icons centered")
-controller.centersIcons = false
+controller.iconAlignment = .left
 settle()
-check(abs(scrubberLeft()) < 1, "Centering off: starts from the left")
-controller.centersIcons = true
+check(abs(scrubberLeft()) < 1, "Align left: starts from the left")
+controller.iconAlignment = .right
+settle()
+check(abs(scrubberLeft() - (available - contentW)) < 2, "Align right: icons end at the right edge of the icon area (left=\(scrubberLeft()))")
+assertClean("few icons right-aligned")
+controller.iconAlignment = .center
 settle()
 
 // 图标超出宽度：靠左、满宽

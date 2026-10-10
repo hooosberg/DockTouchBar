@@ -173,5 +173,13 @@ extension Translations {
         "More": "Ещё",
         "Hide the Dock icon": "Скрыть значок в Dock",
         "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Параметры → Основные → Скрыть значок в Dock: приложение не показывается в Dock и остаётся в строке меню. Нажмите на значок в строке меню или снова откройте приложение из «Программ», чтобы вызвать его меню.",
+        "Icon position": "Положение значков",
+        "Left": "Слева",
+        "Center": "По центру",
+        "Right": "Справа",
+        "Every {0} s": "Каждые {0} с",
+        "Re-check and restore after yielding": "Перепроверять и возвращать после уступки",
+        "When on, the Dock hides temporarily and returns afterward. If the release of Fn or the end of a capture is missed, the Dock comes back on its own within this time; it never returns early while Fn is still held.": "Если включено, Dock временно скрывается и затем возвращается. Если отпускание Fn или конец съёмки пропущены, Dock сам вернётся в течение этого времени; пока Fn удерживается, раньше он не возвращается.",
+        "Centers the icons when they fit (align right is in Settings); once they overflow the Touch Bar they start from the left and scroll": "Центрирует значки, если они помещаются (выравнивание вправо — в настройках); если не помещаются на Touch Bar, начинаются слева и прокручиваются",
     ]
 }

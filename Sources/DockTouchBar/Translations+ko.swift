@@ -173,5 +173,13 @@ extension Translations {
         "More": "기타",
         "Hide the Dock icon": "Dock 아이콘 숨기기",
         "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "설정 → 일반 → Dock에서 아이콘 숨기기: Dock에 표시되지 않고 메뉴 막대에 상주합니다. 메뉴를 열려면 메뉴 막대 아이콘을 클릭하거나 응용 프로그램에서 앱을 다시 여세요.",
+        "Icon position": "아이콘 위치",
+        "Left": "왼쪽",
+        "Center": "가운데",
+        "Right": "오른쪽",
+        "Every {0} s": "{0}초마다",
+        "Re-check and restore after yielding": "양보 후 다시 확인하고 복원",
+        "When on, the Dock hides temporarily and returns afterward. If the release of Fn or the end of a capture is missed, the Dock comes back on its own within this time; it never returns early while Fn is still held.": "켜면 Dock이 잠시 숨겨졌다가 돌아옵니다. Fn을 뗀 것이나 캡처 종료를 놓쳐도 이 시간 안에 Dock이 스스로 돌아옵니다. Fn을 누르고 있는 동안에는 일찍 돌아오지 않습니다.",
+        "Centers the icons when they fit (align right is in Settings); once they overflow the Touch Bar they start from the left and scroll": "아이콘이 들어갈 때 가운데에 배치합니다(오른쪽 정렬은 설정에서 선택). Touch Bar를 넘으면 왼쪽부터 시작해 스크롤됩니다",
     ]
 }

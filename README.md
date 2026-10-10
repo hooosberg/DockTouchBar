@@ -71,7 +71,7 @@ DockTouchBar puts your Dock on the Touch Bar: tap, double-tap, long-press. If yo
 | **Coffee cup** (right end) | Take a break: hide the Dock and hand the Touch Bar back to the system (brightness, volume). It returns on its own after 10–60 s |
 | **Center / maximize button** (far right) | Center the frontmost window; tap again to maximize, and again to center. Needs Accessibility permission |
 
-Menu bar menu: Show Dock on Touch Bar, Only show running apps, Center the icons, Show the center / maximize button, Hide icon in Dock, Launch at login, Settings…. **Settings** has icon spacing, break length, centered-window size, double-tap, long-press time and season, yielding to system Touch Bar controls (screenshot / recording and Fn), language (12), the Accessibility status and a "why can't I see the Dock?" diagnosis. Other pages: **Pair agents**, **How to use**, **About** (with thanks to contributors).
+Menu bar menu: Show Dock on Touch Bar, Only show running apps, Center the icons, Show the center / maximize button, Hide icon in Dock, Launch at login, Settings…. **Settings** has icon position (left / center / right), icon spacing, break length, centered-window size, double-tap, long-press time and season, yielding to system Touch Bar controls (screenshot / recording and Fn, with a re-check timer that brings the Dock back if the end of a yield is missed), language (12), the Accessibility status and a "why can't I see the Dock?" diagnosis. Other pages: **Pair agents**, **How to use**, **About** (with thanks to contributors).
 
 **Hide the Dock icon:** Settings → General → *Hide icon in Dock* keeps the app running in the background with only the menu bar icon.
 
@@ -167,7 +167,7 @@ DockTouchBar is better because of these people:
 | [@thierry-laval](https://github.com/thierry-laval) | Hide the Dock icon (PR #5) · Hold ⌥ while long-pressing to force quit (PR #6) · Universal build fallback (PR #7) |
 | [@1dea193073](https://github.com/1dea193073) | Better agent-pairing diagnostics, demo vs. real activity (PR #3) |
 | [@Aserti2](https://github.com/Aserti2) | Asked for a way to hide the Dock icon (#4) |
-| [@fatHROSE](https://github.com/fatHROSE) | Reported the fn-key yielding, which led to making it optional; suggested centering and auto-return (#2) |
+| [@fatHROSE](https://github.com/fatHROSE) | Reported the fn-key yielding, which led to making it optional; suggested right-aligned icons and auto-return, both added in 1.25 (#2) |
 | [@hlenyafinland](https://github.com/hlenyafinland) | Early feedback and suggestions (#1) |
 
 The same list is in the app: **Settings → About → Thanks**.

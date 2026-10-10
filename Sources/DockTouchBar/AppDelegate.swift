@@ -104,7 +104,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         dock.centerWidthPercent = defaults.integer(forKey: Key.centerWidth)
         dock.pauseDuration = TimeInterval(defaults.integer(forKey: Key.hideSeconds))
         dock.iconSpacing = CGFloat(defaults.integer(forKey: Key.iconSpacing))
-        dock.centersIcons = defaults.bool(forKey: Key.centerIcons)
+        dock.iconAlignment = IconAlignment.current(defaults)
+        dock.yieldRecheckInterval = TimeInterval(defaults.integer(forKey: Key.yieldRecheck))
         AgentMonitor.shared.isEnabled = defaults.bool(forKey: Key.agentStatus)
         let hideDock = defaults.bool(forKey: Key.hideDockIcon)
         let targetPolicy: NSApplication.ActivationPolicy = hideDock ? .accessory : .regular
@@ -146,9 +147,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         pinnedItem.state = defaults.bool(forKey: Key.showPinned) ? .off : .on
 
         centerIconsItem.title = L10n.tr("图标居中显示", "Center the icons")
-        centerIconsItem.state = defaults.bool(forKey: Key.centerIcons) ? .on : .off
-        centerIconsItem.toolTip = L10n.tr("图标不多时居中；图标超出 Touch Bar 宽度时仍从左边开始滑动",
-                                          "Centers the icons when they fit; once they overflow the Touch Bar they start from the left and scroll")
+        centerIconsItem.state = IconAlignment.current(defaults) == .center ? .on : .off
+        centerIconsItem.toolTip = L10n.tr("图标不多时居中（靠右可在设置里选）；图标超出 Touch Bar 宽度时仍从左边开始滑动",
+                                          "Centers the icons when they fit (align right is in Settings); once they overflow the Touch Bar they start from the left and scroll")
 
         centerButtonItem.title = L10n.tr("显示“窗口居中 / 最大化”按钮", "Show the center / maximize button")
         centerButtonItem.state = defaults.bool(forKey: Key.showCenterButton) ? .on : .off
@@ -175,7 +176,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @objc private func toggleCenterIcons() {
-        defaults.set(!defaults.bool(forKey: Key.centerIcons), forKey: Key.centerIcons)
+        IconAlignment.set(IconAlignment.current(defaults) == .center ? .left : .center, in: defaults)
     }
 
     @objc private func toggleCenterButton() {

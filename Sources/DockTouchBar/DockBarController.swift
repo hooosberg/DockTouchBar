@@ -61,6 +61,12 @@ final class DockBarController: NSObject {
     /// 点“咖啡杯”后暂时隐藏多久（秒）；如果屏幕已经被调黑，则不看时间，等亮度回来。
     var pauseDuration: TimeInterval = 20
     private var pauseTimer: Timer?
+    /// 避让系统工具期间，每隔这么多秒重新核对一次它们是不是真的还在占着 Touch Bar（0 = 不核对）。
+    /// 兜底“松开 Fn / 结束截图的事件丢了”造成的一直不恢复；Fn 真的还按着时核对结果仍是“在占着”，不会提前恢复。
+    var yieldRecheckInterval: TimeInterval = 5 {
+        didSet { if oldValue != yieldRecheckInterval { updateYieldRecheck() } }
+    }
+    private var yieldRecheckTimer: Timer?
 
     private lazy var touchBar: NSTouchBar = {
         let bar = NSTouchBar()
@@ -138,8 +144,8 @@ final class DockBarController: NSObject {
     }
 
     /// 图标不多、没占满图标区时是否居中显示；占满（要滑动）时本来就靠左，这个选项不起作用。
-    var centersIcons = true {
-        didSet { if oldValue != centersIcons { updateDockWidth() } }
+    var iconAlignment = IconAlignment.center {
+        didSet { if oldValue != iconAlignment { updateDockWidth() } }
     }
 
     /// 长按多少秒退出 App；0 表示不启用。
@@ -384,6 +390,7 @@ final class DockBarController: NSObject {
         pauseReasons.insert(reason)
         cancelPress()
         if shouldDismiss { TouchBarBridge.dismiss(touchBar) }
+        if reason != .coffee { updateYieldRecheck() }
         guard reason == .coffee else { return }
 
         let wasDark = ScreenBrightness.current.map { $0 < Metrics.brightnessDark } ?? false
@@ -405,6 +412,7 @@ final class DockBarController: NSObject {
             pauseTimer = nil
         }
         guard pauseReasons.remove(reason) != nil else { return }
+        updateYieldRecheck()
         if shouldPresent, !isPaused {
             present()
             presentAgainIfHidden(after: 1)
@@ -415,6 +423,26 @@ final class DockBarController: NSObject {
         pauseTimer?.invalidate()
         pauseTimer = nil
         pauseReasons.removeAll()
+        updateYieldRecheck()
+    }
+
+    /// 只在因 Fn / 截图而避让期间开着定时器；平时不轮询，不影响空闲唤醒为 0。
+    private func updateYieldRecheck() {
+        let yielding = pauseReasons.contains(.functionRow) || pauseReasons.contains(.systemCapture)
+        guard yielding, yieldRecheckInterval > 0 else {
+            yieldRecheckTimer?.invalidate()
+            yieldRecheckTimer = nil
+            return
+        }
+        guard yieldRecheckTimer?.timeInterval != yieldRecheckInterval else { return }
+        yieldRecheckTimer?.invalidate()
+        let timer = Timer(timeInterval: yieldRecheckInterval, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            self.systemTouchBarActivity.refreshCurrentState()
+            self.functionRowActivity.refreshCurrentState()
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        yieldRecheckTimer = timer
     }
 
     private func presentAgainIfHidden(after delay: TimeInterval) {
@@ -844,8 +872,13 @@ final class DockBarController: NSObject {
     private func updateDockWidth() {
         let available = Metrics.maxDockWidth - buttonsWidth
         scrubberWidth.constant = min(contentWidth, available)
-        // 只有放得下才居中；放不下就是满宽、从最左开始滑动。
-        scrubberLeading.constant = centersIcons && contentWidth < available ? ((available - contentWidth) / 2).rounded() : 0
+        // 只有放得下才居中 / 靠右；放不下就是满宽、从最左开始滑动。
+        let spare = max(0, available - contentWidth)
+        switch iconAlignment {
+        case .left: scrubberLeading.constant = 0
+        case .center: scrubberLeading.constant = (spare / 2).rounded()
+        case .right: scrubberLeading.constant = spare.rounded()
+        }
     }
 
     private static func width(of tile: DockTile) -> CGFloat {

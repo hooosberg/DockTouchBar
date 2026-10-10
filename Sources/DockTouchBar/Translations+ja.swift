@@ -173,5 +173,13 @@ extension Translations {
         "More": "その他",
         "Hide the Dock icon": "Dock のアイコンを隠す",
         "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "設定 → 一般 → Dockでアイコンを非表示：Dock には表示されず、メニューバーに常駐します。メニューを開くには、メニューバーのアイコンをクリックするか、「アプリケーション」からもう一度開きます。",
+        "Icon position": "アイコンの位置",
+        "Left": "左",
+        "Center": "中央",
+        "Right": "右",
+        "Every {0} s": "{0} 秒ごと",
+        "Re-check and restore after yielding": "譲った後に再確認して復帰",
+        "When on, the Dock hides temporarily and returns afterward. If the release of Fn or the end of a capture is missed, the Dock comes back on its own within this time; it never returns early while Fn is still held.": "オンの場合、Dock は一時的に隠れ、あとで戻ります。Fn を離したことや撮影の終了を取りこぼしても、この時間内に Dock が自動で戻ります。Fn を押している間は早めに戻ることはありません。",
+        "Centers the icons when they fit (align right is in Settings); once they overflow the Touch Bar they start from the left and scroll": "収まる場合はアイコンを中央に配置します（右寄せは設定で選べます）。Touch Bar に収まらない場合は左から始まりスクロールします",
     ]
 }

@@ -173,5 +173,13 @@ extension Translations {
         "More": "Diğer",
         "Hide the Dock icon": "Dock simgesini gizle",
         "Settings → General → Hide icon in Dock: it no longer shows in the Dock and stays in the menu bar. Click the menu bar icon, or open the app again from Applications, to bring up its menu.": "Ayarlar → Genel → Dock'ta simgeyi gizle: Dock’ta görünmez, menü çubuğunda kalır. Menüsünü açmak için menü çubuğu simgesine tıklayın veya uygulamayı Uygulamalar’dan yeniden açın.",
+        "Icon position": "Simge konumu",
+        "Left": "Sol",
+        "Center": "Orta",
+        "Right": "Sağ",
+        "Every {0} s": "Her {0} sn",
+        "Re-check and restore after yielding": "Çekildikten sonra yeniden denetle ve geri getir",
+        "When on, the Dock hides temporarily and returns afterward. If the release of Fn or the end of a capture is missed, the Dock comes back on its own within this time; it never returns early while Fn is still held.": "Açıkken Dock geçici olarak gizlenir ve sonra geri döner. Fn'nin bırakılması veya bir yakalamanın bitmesi kaçırılırsa Dock bu süre içinde kendiliğinden geri gelir; Fn basılı olduğu sürece asla erken dönmez.",
+        "Centers the icons when they fit (align right is in Settings); once they overflow the Touch Bar they start from the left and scroll": "Sığdıklarında simgeleri ortalar (sağa hizalama Ayarlar'da); Touch Bar'ı aşarlarsa soldan başlar ve kayar",
     ]
 }
