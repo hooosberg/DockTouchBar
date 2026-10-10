@@ -9,6 +9,8 @@ import ApplicationServices
 enum QuitPlan {
     /// 退出整个 App（等同 ⌘Q）。
     case quitApp
+    /// 强制退出整个 App（等同 强制退出 / kill -9）。
+    case forceQuitApp
     /// 关掉这个 App 的所有窗口（只用于访达：它退不了）。
     case closeWindow
     /// 访达的窗口都在别的桌面（辅助功能够不着）：先切到窗口那边，再把它们全关掉。
@@ -46,12 +48,14 @@ enum QuitPlanner {
     ///   窗口都在别的桌面（辅助功能够不着）就先切过去再关；确实一个窗口都没有时说明情况。
     /// - 其他 App：一律退出整个 App，不管它有几个窗口、是在前台、被隐藏还是最小化了。
     static func plan(for app: NSRunningApplication) -> QuitPlan {
-        guard app.bundleIdentifier == finderID else { return .quitApp }
-        if let count = closableWindows(of: app.processIdentifier)?.count, count > 0 { return .closeWindow }
-        if AppSwitcher.hasOpenWindows(pid: app.processIdentifier) {
-            return AXIsProcessTrusted() ? .locateAndClose : .hideApp
+        guard app.bundleIdentifier != finderID else {
+            if let count = closableWindows(of: app.processIdentifier)?.count, count > 0 { return .closeWindow }
+            if AppSwitcher.hasOpenWindows(pid: app.processIdentifier) {
+                return AXIsProcessTrusted() ? .locateAndClose : .hideApp
+            }
+            return .notice(L10n.tr("访达没有窗口，也不能退出", "Finder has no window and can't be quit"))
         }
-        return .notice(L10n.tr("访达没有窗口，也不能退出", "Finder has no window and can't be quit"))
+        return .quitApp
     }
 
     // MARK: - 执行，并核对结果
@@ -69,6 +73,12 @@ enum QuitPlanner {
             guard app.terminate() else { completion(.stillOpen); return }
             wait(until: { isGoneFromSight(app, pid: pid) }) { finished in
                 completion(finished ? .done : (hasPendingDialog(pid) ? .needsAnswer : .stillOpen))
+            }
+        case .forceQuitApp:
+            _ = app.forceTerminate()
+            kill(pid, SIGKILL)
+            wait(until: { isGoneFromSight(app, pid: pid) }) { finished in
+                completion(finished ? .done : .stillOpen)
             }
         case .closeWindow:
             closeAllWindows(of: app, completion: completion)
