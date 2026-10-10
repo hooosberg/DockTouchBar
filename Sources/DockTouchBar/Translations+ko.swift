@@ -129,6 +129,7 @@ extension Translations {
         "Yield while Fn is held": "Fn을 누르는 동안 제어 포기",
         "When on, the Dock hides temporarily and returns afterward": "켜지면 Dock이 일시적으로 숨겨졌다가 나중에 나타납니다",
         "General": "일반",
+        "Hide icon in Dock": "Dock에서 아이콘 숨기기",
         "Language": "언어",
         "Permissions": "권한",
         "Accessibility: on": "손쉬운 사용: 켜짐",

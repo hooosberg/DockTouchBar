@@ -29,6 +29,7 @@ final class SettingsWindowController {
             NSApp.activate(ignoringOtherApps: true)
         }
         window.makeKeyAndOrderFront(nil)
+        window.orderFrontRegardless()
         if checkUpdates {
             UpdateManager.shared.checkForUpdates(silent: false)
         }
@@ -48,10 +49,24 @@ final class SettingsWindowController {
 
 enum SettingsPage { case settings, usage, about }
 
+private final class SettingsViewState: ObservableObject {
+    @Published var page: SettingsPage
+    init(initialPage: SettingsPage) {
+        self.page = initialPage
+    }
+}
+
 private struct SettingsView: View {
     typealias Page = SettingsPage
     let initialPage: SettingsPage
     let onDiagnose: () -> Void
+    @StateObject private var state: SettingsViewState
+
+    init(initialPage: SettingsPage, onDiagnose: @escaping () -> Void) {
+        self.initialPage = initialPage
+        self.onDiagnose = onDiagnose
+        _state = StateObject(wrappedValue: SettingsViewState(initialPage: initialPage))
+    }
 
     /// 使用说明里的一项：左边是图标（系统符号或者像素画），右边是标题和说明。
     private struct Usage: Identifiable {
@@ -65,7 +80,6 @@ private struct SettingsView: View {
         let detail: String
     }
 
-    @State private var page = Page.settings
     /// 读取语言键，改了语言后整个窗口立刻重绘。
     @AppStorage(SettingsKey.language) private var language = AppLanguage.system.rawValue
     @ObservedObject private var updater = UpdateManager.shared
@@ -99,7 +113,7 @@ private struct SettingsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Picker("", selection: $page) {
+            Picker("", selection: $state.page) {
                 Text(L10n.tr("设置", "Settings")).tag(Page.settings)
                 Text(L10n.tr("使用说明", "How to use")).tag(Page.usage)
                 Text(L10n.tr("关于", "About")).tag(Page.about)
@@ -110,14 +124,14 @@ private struct SettingsView: View {
             .frame(width: 300)
             .padding(.vertical, 14)
 
-            switch page {
+            switch state.page {
             case .settings: SettingsForm(onDiagnose: onDiagnose)
             case .usage: usagePage
             case .about: aboutPage
             }
         }
         .frame(width: 500, height: 700)
-        .onAppear { page = initialPage }
+        .onAppear { state.page = initialPage }
     }
 
     // MARK: - 关于
@@ -404,6 +418,31 @@ private struct SettingsView: View {
 
 // MARK: - 设置页
 
+private final class SettingsFormState: ObservableObject {
+    @Published var launchAtLogin = SMAppService.mainApp.status == .enabled
+    @Published var hasAccess = AppSwitcher.hasAccessibilityAccess
+
+    func refresh() {
+        hasAccess = AppSwitcher.hasAccessibilityAccess
+        launchAtLogin = SMAppService.mainApp.status == .enabled
+    }
+
+    func setLaunchAtLogin(_ on: Bool) {
+        let service = SMAppService.mainApp
+        do {
+            if on { try service.register() } else { try service.unregister() }
+        } catch {
+            let alert = NSAlert()
+            alert.messageText = L10n.tr("无法修改登录项", "Couldn't change the login item")
+            alert.informativeText = "\(error.localizedDescription)\n\n"
+                + L10n.tr("先把 App 放进「应用程序」文件夹再试。", "Move the app to the Applications folder and try again.")
+            alert.runModal()
+        }
+        if service.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
+        launchAtLogin = service.status == .enabled
+    }
+}
+
 private struct SettingsForm: View {
     let onDiagnose: () -> Void
 
@@ -421,8 +460,8 @@ private struct SettingsForm: View {
     @AppStorage(SettingsKey.yieldCapture) private var yieldCapture = true
     @AppStorage(SettingsKey.yieldFunctionRow) private var yieldFn = true
     @AppStorage(SettingsKey.language) private var language = AppLanguage.system.rawValue
-    @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
-    @State private var hasAccess = AppSwitcher.hasAccessibilityAccess
+    @AppStorage(SettingsKey.hideDockIcon) private var hideDockIcon = false
+    @StateObject private var state = SettingsFormState()
 
     var body: some View {
         Form {
@@ -482,19 +521,20 @@ private struct SettingsForm: View {
 
             Section(L10n.tr("通用", "General")) {
                 Toggle(L10n.tr("登录时自动启动", "Launch at login"), isOn: Binding(
-                    get: { launchAtLogin },
-                    set: { setLaunchAtLogin($0) }))
+                    get: { state.launchAtLogin },
+                    set: { state.setLaunchAtLogin($0) }))
+                Toggle(L10n.tr("在程序坞中隐藏图标", "Hide icon in Dock"), isOn: $hideDockIcon)
             }
 
             Section(L10n.tr("权限", "Permissions")) {
                 HStack {
-                    Image(systemName: hasAccess ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                        .foregroundStyle(hasAccess ? Color.green : Color.orange)
-                    Text(hasAccess ? L10n.tr("辅助功能：已开启", "Accessibility: on")
-                                   : L10n.tr("辅助功能：未开启", "Accessibility: off"))
+                    Image(systemName: state.hasAccess ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                        .foregroundStyle(state.hasAccess ? Color.green : Color.orange)
+                    Text(state.hasAccess ? L10n.tr("辅助功能：已开启", "Accessibility: on")
+                                         : L10n.tr("辅助功能：未开启", "Accessibility: off"))
                     Spacer()
-                    Button(hasAccess ? L10n.tr("打开系统设置", "Open System Settings")
-                                     : L10n.tr("去开启…", "Turn on…")) {
+                    Button(state.hasAccess ? L10n.tr("打开系统设置", "Open System Settings")
+                                           : L10n.tr("去开启…", "Turn on…")) {
                         AppSwitcher.requestAccessibilityAccess()
                         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
                             NSWorkspace.shared.open(url)
@@ -512,23 +552,7 @@ private struct SettingsForm: View {
         }
         .formStyle(.grouped)
         .onAppear {
-            hasAccess = AppSwitcher.hasAccessibilityAccess
-            launchAtLogin = SMAppService.mainApp.status == .enabled
+            state.refresh()
         }
-    }
-
-    private func setLaunchAtLogin(_ on: Bool) {
-        let service = SMAppService.mainApp
-        do {
-            if on { try service.register() } else { try service.unregister() }
-        } catch {
-            let alert = NSAlert()
-            alert.messageText = L10n.tr("无法修改登录项", "Couldn't change the login item")
-            alert.informativeText = "\(error.localizedDescription)\n\n"
-                + L10n.tr("先把 App 放进「应用程序」文件夹再试。", "Move the app to the Applications folder and try again.")
-            alert.runModal()
-        }
-        if service.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
-        launchAtLogin = service.status == .enabled
     }
 }

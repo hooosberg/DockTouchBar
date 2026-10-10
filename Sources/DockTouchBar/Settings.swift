@@ -16,11 +16,13 @@ enum SettingsKey {
     static let iconSpacing = "iconSpacing"
     static let centerIcons = "centerIcons"
     static let language = "language"
+    static let hideDockIcon = "hideDockIcon"
 
     static let defaults: [String: Any] = [
         enabled: true, showPinned: true, doubleTapMinimize: true, longPressSeconds: 3,
         yieldCapture: true, yieldFunctionRow: true, hideSeconds: 20, showCenterButton: true,
         centerHeight: 80, centerWidth: 0, iconSpacing: 4, centerIcons: true,
+        hideDockIcon: false,
     ]
 }
 

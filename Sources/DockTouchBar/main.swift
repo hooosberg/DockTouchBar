@@ -3,6 +3,7 @@ import AppKit
 let app = NSApplication.shared
 let delegate = AppDelegate()
 app.delegate = delegate
-// 程序坞里有图标，装好后从程序坞或启动台点一下就能打开菜单；同时保留菜单栏图标。
-app.setActivationPolicy(.regular)
+// 根据用户设置决定是否在程序坞显示图标：隐藏后仍常驻后台运行并保留菜单栏图标。
+let hideDockIcon = UserDefaults.standard.bool(forKey: SettingsKey.hideDockIcon)
+app.setActivationPolicy(hideDockIcon ? .accessory : .regular)
 app.run()

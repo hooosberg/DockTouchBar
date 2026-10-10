@@ -29,12 +29,21 @@ SIGN_IDENTITY="${SIGN_IDENTITY:--}"
 
 # 通用二进制：arm64（Apple 芯片，已实机验证）+ x86_64（Intel，未实机验证）
 ARCHS=(--arch arm64 --arch x86_64)
-swift build -c release "${ARCHS[@]}"
-BIN_DIR="$(swift build -c release "${ARCHS[@]}" --show-bin-path)"
+if swift build -c release "${ARCHS[@]}" 2>/dev/null; then
+    BIN_DIR="$(swift build -c release "${ARCHS[@]}" --show-bin-path)"
+    BIN_FILE="$BIN_DIR/$APP_NAME"
+else
+    echo "Fallback to native build for arm64 and x86_64..."
+    swift build --build-system native -c release --arch arm64
+    swift build --build-system native -c release --arch x86_64
+    mkdir -p build/bin
+    lipo -create .build/arm64-apple-macosx/release/$APP_NAME .build/x86_64-apple-macosx/release/$APP_NAME -output build/bin/$APP_NAME
+    BIN_FILE="build/bin/$APP_NAME"
+fi
 
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$BIN_DIR/$APP_NAME" "$APP/Contents/MacOS/$APP_NAME"
+cp "$BIN_FILE" "$APP/Contents/MacOS/$APP_NAME"
 # 去掉调试符号：链接后的二进制里带着编译机器上的源码路径（用户名、目录名）。公开发布前必须去掉，
 # 也顺便让文件更小。这一步要在签名之前做。
 strip -S "$APP/Contents/MacOS/$APP_NAME"

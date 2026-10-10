@@ -129,6 +129,7 @@ extension Translations {
         "Yield while Fn is held": "Уступить при удержании Fn",
         "When on, the Dock hides temporarily and returns afterward": "Когда включено, Dock скрывается временно и возвращается позже",
         "General": "Основные",
+        "Hide icon in Dock": "Скрыть значок в Dock",
         "Language": "Язык",
         "Permissions": "Разрешения",
         "Accessibility: on": "Универсальный доступ: вкл.",

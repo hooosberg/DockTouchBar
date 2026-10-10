@@ -21,6 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private lazy var pinnedItem = makeItem(#selector(togglePinned))
     private lazy var centerIconsItem = makeItem(#selector(toggleCenterIcons))
     private lazy var centerButtonItem = makeItem(#selector(toggleCenterButton))
+    private lazy var hideDockIconItem = makeItem(#selector(toggleHideDockIcon))
     private lazy var loginItem = makeItem(#selector(toggleLaunchAtLogin))
     private lazy var settingsItem = makeItem(#selector(showSettings), keyEquivalent: ",")
     private lazy var quitItem = makeItem(#selector(NSApplication.terminate(_:)), target: NSApp, keyEquivalent: "q")
@@ -43,6 +44,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(pinnedItem)
         menu.addItem(centerIconsItem)
         menu.addItem(centerButtonItem)
+        menu.addItem(hideDockIconItem)
         menu.addItem(loginItem)
         menu.addItem(.separator())
         menu.addItem(settingsItem)
@@ -87,6 +89,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         dock.pauseDuration = TimeInterval(defaults.integer(forKey: Key.hideSeconds))
         dock.iconSpacing = CGFloat(defaults.integer(forKey: Key.iconSpacing))
         dock.centersIcons = defaults.bool(forKey: Key.centerIcons)
+        let hideDock = defaults.bool(forKey: Key.hideDockIcon)
+        let targetPolicy: NSApplication.ActivationPolicy = hideDock ? .accessory : .regular
+        if NSApp.activationPolicy() != targetPolicy {
+            NSApp.setActivationPolicy(targetPolicy)
+        }
         let enabled = defaults.bool(forKey: Key.enabled)
         if appliedEnabled != enabled {
             appliedEnabled = enabled
@@ -96,7 +103,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     /// App 已经在运行时，再从「应用程序」或启动台打开它：弹出菜单栏菜单，方便开关和设置。
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        statusItem?.button?.performClick(nil)
+        if let button = statusItem?.button {
+            button.performClick(nil)
+        } else {
+            showSettings()
+        }
         return false
     }
 
@@ -125,6 +136,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         centerButtonItem.title = L10n.tr("显示“窗口居中 / 最大化”按钮", "Show the center / maximize button")
         centerButtonItem.state = defaults.bool(forKey: Key.showCenterButton) ? .on : .off
 
+        hideDockIconItem.title = L10n.tr("在程序坞中隐藏图标", "Hide icon in Dock")
+        hideDockIconItem.state = defaults.bool(forKey: Key.hideDockIcon) ? .on : .off
+
         loginItem.title = L10n.tr("登录时自动启动", "Launch at login")
         loginItem.state = SMAppService.mainApp.status == .enabled ? .on : .off
 
@@ -149,6 +163,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func toggleCenterButton() {
         defaults.set(!defaults.bool(forKey: Key.showCenterButton), forKey: Key.showCenterButton)
+    }
+
+    @objc private func toggleHideDockIcon() {
+        defaults.set(!defaults.bool(forKey: Key.hideDockIcon), forKey: Key.hideDockIcon)
     }
 
     @objc private func toggleLaunchAtLogin() {
