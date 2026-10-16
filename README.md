@@ -92,11 +92,12 @@ No agent-specific plugins: copy one prompt, paste it to your agent, and it conne
 
 - **The app never edits another tool's configuration.** The agent does, on your Mac, after you paste the prompt. Nothing leaves your Mac for this feature.
 - Needs an agent that can run a command on your Mac and runs in a desktop app (a terminal or editor works too). If it can't reach the app, it is told to say so instead of claiming success.
+- **Terminal CLI agents (Claude Code, Codex CLI, etc.):** When running AI coding tools in your terminal (macOS Terminal, iTerm2, Ghostty, or VS Code embedded terminal), DockTouchBar automatically resolves the process tree across intermediate root processes (such as `/usr/bin/login`) to identify the outer terminal app. While the agent executes commands or thinks, the terminal icon on the Touch Bar displays falling digits, turning to green **OK** once the turn completes.
 - Some agents ask you to trust the new hook once (Codex: ChatGPT Settings → Hooks → Trust all).
 
 | Agent | How it connects |
 |---|---|
-| Claude Code, Codex (ChatGPT app / CLI), Qoder, WorkBuddy | its own hooks |
+| Claude Code (Terminal / 终端 CLI), Codex (ChatGPT app / CLI), Qoder, WorkBuddy | its own hooks |
 | Antigravity, Qwen Work (千问办公) | a rule in its long-term instructions (`GEMINI.md` for Antigravity); no hooks, so it relies on the agent following the rule |
 | Doubao Work (豆包) | DockTouchBar reads its session files, read-only |
 | **Anything else** | paste the prompt; it picks hooks or an instruction rule and reports back |

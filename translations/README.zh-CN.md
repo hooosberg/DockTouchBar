@@ -92,11 +92,12 @@ DockTouchBar 把 Dock 放到 Touch Bar 上：单击、双击、长按。如果�
 
 - **App 从不修改其他工具的配置。** 是智能体在你粘贴提示词之后，在你的 Mac 上自行修改。这个功能不会把任何数据发出你的 Mac。
 - 需要智能体能在你的 Mac 上执行命令，并且运行在桌面 App 中（终端或编辑器也可以）。如果它连不上 App，提示词会要求它如实说明，而不是声称成功。
+- **终端机 / 命令行 AI 助手（Claude Code 等）：** 在终端（如 macOS 终端 Terminal.app、iTerm2、Ghostty 或 VS Code 集成终端）中运行 AI 编程 CLI 时，DockTouchBar 会自动沿进程树向上精准穿透（包括跨越 root 属主的 `login` 进程），找到外层的终端 App 图标。在终端里提问、AI 运行命令或工具时，Touch Bar 上的终端图标立即播放字符雨，任务结束等候输入时变为绿色 **OK**。
 - 有些智能体会请你信任一次新的 hook（例如 Codex：ChatGPT 设置 → Hooks → 全部信任）。
 
 | 智能体 | 接入方式 |
 |---|---|
-| Claude Code、Codex（ChatGPT 应用 / CLI）、Qoder、WorkBuddy | 它自己的 hook |
+| Claude Code（终端 / 命令行 CLI）、Codex（ChatGPT 应用 / CLI）、Qoder、WorkBuddy | 它自己的 hook |
 | Antigravity、Qwen Work（千问办公） | 写进它长期指令里的一条规则（Antigravity 用 `GEMINI.md`）；没有 hook，因此依赖智能体遵守该规则 |
 | Doubao Work（豆包） | DockTouchBar 只读取它的会话文件 |
 | **其他任何智能体** | 粘贴提示词；它自己选择 hook 或指令规则，并汇报结果 |

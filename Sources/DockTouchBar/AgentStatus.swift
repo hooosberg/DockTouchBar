@@ -539,7 +539,17 @@ final class AgentMonitor {
     private static func parentPID(of pid: pid_t) -> pid_t? {
         var info = proc_bsdinfo()
         let size = Int32(MemoryLayout<proc_bsdinfo>.size)
-        guard proc_pidinfo(pid, PROC_PIDTBSDINFO, 0, &info, size) == size else { return nil }
-        return pid_t(info.pbi_ppid)
+        if proc_pidinfo(pid, PROC_PIDTBSDINFO, 0, &info, size) == size {
+            return pid_t(info.pbi_ppid)
+        }
+        // 遇到 root 属主的中间进程（例如 Terminal 启动 shell 必经的 /usr/bin/login）时，
+        // proc_pidinfo 会报 EPERM，sysctl KERN_PROC_PID 是不需要 root 的 BSD 兜底。
+        var mib: [Int32] = [CTL_KERN, KERN_PROC, KERN_PROC_PID, pid]
+        var kinfo = kinfo_proc()
+        var ksize = MemoryLayout<kinfo_proc>.stride
+        if sysctl(&mib, 4, &kinfo, &ksize, nil, 0) == 0 && ksize > 0 {
+            return kinfo.kp_eproc.e_ppid
+        }
+        return nil
     }
 }
