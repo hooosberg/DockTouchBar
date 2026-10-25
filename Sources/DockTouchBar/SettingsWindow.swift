@@ -464,8 +464,10 @@ private final class SettingsFormState: ObservableObject {
     @Published var hasAccess = AppSwitcher.hasAccessibilityAccess
 
     func refresh() {
-        hasAccess = AppSwitcher.hasAccessibilityAccess
-        launchAtLogin = SMAppService.mainApp.status == .enabled
+        let access = AppSwitcher.hasAccessibilityAccess
+        if access != hasAccess { hasAccess = access }
+        let login = SMAppService.mainApp.status == .enabled
+        if login != launchAtLogin { launchAtLogin = login }
     }
 
     func setLaunchAtLogin(_ on: Bool) {
@@ -615,6 +617,13 @@ private struct SettingsForm: View {
         }
         .formStyle(.grouped)
         .onAppear {
+            state.refresh()
+        }
+        // 用户在系统设置里打开权限后，这里要自己刷新，否则一直显示“未开启”。
+        .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
+            state.refresh()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             state.refresh()
         }
     }
