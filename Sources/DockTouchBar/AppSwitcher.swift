@@ -286,7 +286,9 @@ enum AppSwitcher {
     }
 
     /// 弹出系统的“允许辅助功能”提示，并把本 App 加进 系统设置 → 隐私与安全性 → 辅助功能 的列表。
+    /// 已经有权限就不弹，免得重复授权时一遍遍跳窗。
     static func requestAccessibilityAccess() {
+        guard !AXIsProcessTrusted() else { return }
         _ = AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
     }
 
