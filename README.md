@@ -165,7 +165,7 @@ DockTouchBar is better because of these people:
 
 | Who | Contribution |
 |---|---|
-| [@thierry-laval](https://github.com/thierry-laval) | Hide the Dock icon (PR #5) · Hold ⌥ while long-pressing to force quit (PR #6) · Universal build fallback (PR #7) |
+| [@thierry-laval](https://github.com/thierry-laval) | Hide the Dock icon (PR #5) · Hold ⌥ while long-pressing to force quit (PR #6) · Universal build fallback (PR #7) · Settings permission status refresh (PR #11) · Complete French translations (PR #12) |
 | [@1dea193073](https://github.com/1dea193073) | Better agent-pairing diagnostics, demo vs. real activity (PR #3) |
 | [@Aserti2](https://github.com/Aserti2) | Asked for a way to hide the Dock icon (#4) |
 | [@fatHROSE](https://github.com/fatHROSE) | Reported the fn-key yielding, which led to making it optional; suggested right-aligned icons and auto-return, both added in 1.25 (#2) |

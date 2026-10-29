@@ -619,10 +619,9 @@ private struct SettingsForm: View {
         .onAppear {
             state.refresh()
         }
-        // 用户在系统设置里打开权限后，这里要自己刷新，否则一直显示“未开启”。
-        .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
-            state.refresh()
-        }
+        // 用户去系统设置打开权限、再切回来时刷新一次，否则这里一直显示“未开启”。
+        // 不挂定时器：窗口关掉后视图还活着（窗口是 isReleasedWhenClosed = false），
+        // 定时器会一直空转；而切回前台必然触发这条通知，已经够了。
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             state.refresh()
         }

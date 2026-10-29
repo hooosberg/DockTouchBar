@@ -22,8 +22,8 @@ enum AppInfo {
 
     static let contributors: [Contributor] = [
         Contributor(handle: "thierry-laval",
-                    zh: "可在程序坞隐藏图标（PR #5）· 按住 ⌥ 长按强制退出（PR #6）· 通用二进制构建回退（PR #7）",
-                    en: "Hide the Dock icon (PR #5) · Hold ⌥ while long-pressing to force quit (PR #6) · Universal build fallback (PR #7)"),
+                    zh: "可在程序坞隐藏图标（PR #5）· 按住 ⌥ 长按强制退出（PR #6）· 通用二进制构建回退（PR #7）· 设置页权限状态自动刷新（PR #11）· 法语翻译补全（PR #12）",
+                    en: "Hide the Dock icon (PR #5) · Hold ⌥ while long-pressing to force quit (PR #6) · Universal build fallback (PR #7) · Settings permission status refresh (PR #11) · Complete French translations (PR #12)"),
         Contributor(handle: "1dea193073",
                     zh: "改进智能体配对诊断，区分演示与真实活动（PR #3）",
                     en: "Better agent-pairing diagnostics, demo vs. real activity (PR #3)"),
